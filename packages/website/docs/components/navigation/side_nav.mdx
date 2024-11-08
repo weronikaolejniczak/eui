@@ -388,6 +388,10 @@ export default () => {
 
 ## Props
 
-import docgen from '@elastic/eui-docgen/dist/components/side_nav';
+import sideNavDocgen from '@elastic/eui-docgen/dist/components/side_nav';
+import sideNavHeadingDocgen from '@elastic/eui-docgen/dist/components/side_nav/_side_nav_heading';
+import sideNavItemDocgen from '@elastic/eui-docgen/dist/components/side_nav/side_nav_item';
 
-<PropTable definition={docgen.EuiSideNav} />
+<PropTable definition={sideNavDocgen.EuiSideNav} />
+<PropTable definition={sideNavHeadingDocgen.EuiSideNavHeading} />
+<PropTable definition={sideNavItemDocgen.EuiSideNavItem} />
