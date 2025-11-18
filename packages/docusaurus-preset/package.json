@@ -15,7 +15,7 @@
     "directory": "packages/docusaurus-preset"
   },
   "dependencies": {
-    "@elastic/eui-docusaurus-theme": "workspace:^"
+    "@elastic/eui-docusaurus-theme": "1.0.0"
   },
   "devDependencies": {
     "@docusaurus/types": "^3.7.0",
