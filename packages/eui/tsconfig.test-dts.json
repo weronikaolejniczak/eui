@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationDir": "src"
+  },
+  "include": ["src/test/**/*.ts", "tsconfig-defs.d.ts"]
+}

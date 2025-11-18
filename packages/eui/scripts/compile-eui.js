@@ -30,7 +30,10 @@ const IGNORE_TESTENV = [
   '**/*.testenv.tsx',
   '**/*.testenv.ts',
 ];
-const IGNORE_PACKAGES = ['**/react-datepicker/test/**/*.js'];
+const IGNORE_PACKAGES = [
+  '**/react-datepicker/test/**/*.js',
+  '**/react-datepicker/test/**/*.jsx',
+];
 
 async function renameTestEnvFiles() {
   const files = glob.globIterate('test-env/**/*.testenv.js', {
@@ -111,22 +114,31 @@ async function copySvgFiles() {
   );
 }
 
-function runBabel({ outDir, ignore, configFile, env = {} }) {
+function runSwc({ outDir, ignore, env = {} }) {
   return new Promise((resolve, reject) => {
+    const ignoreArgs = ignore.flatMap((pattern) => ['--ignore', pattern]);
+
     const args = [
-      '--quiet',
-      `--out-dir=${outDir}`,
-      '--extensions=.js,.ts,.tsx',
-      `--ignore=${ignore}`,
+      'src',
+      '--out-dir',
+      outDir,
+      ...ignoreArgs,
+      '--extensions=.js,.ts,.tsx,.jsx',
     ];
 
-    if (configFile) {
-      args.push(`--config-file=${configFile}`);
+    const buildEnv = env.EUI_BUILD_ENV;
+    const isOptimize = buildEnv === 'optimize';
+    const isTestEnv = buildEnv === 'test-env';
+
+    if (isOptimize || isTestEnv) {
+      args.push('-C', 'jsc.externalHelpers=true');
     }
 
-    args.push('src');
+    if (env.SWC_MODULE_TYPE) {
+      args.push('-C', `module.type=${env.SWC_MODULE_TYPE}`);
+    }
 
-    const child = spawn('yarn', ['exec', 'babel', ...args], {
+    const child = spawn('yarn', ['exec', 'swc', ...args], {
       env: {
         ...process.env,
         ...env,
@@ -138,7 +150,7 @@ function runBabel({ outDir, ignore, configFile, env = {} }) {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`babel ${outDir} exited with code ${code}`));
+        reject(new Error(`swc ${outDir} exited with code ${code}`));
       }
     });
   });
@@ -149,72 +161,64 @@ async function compileLib() {
 
   console.log('Compiling src/ to es/, lib/, optimize/, and test-env/');
 
-  // Run all code (com|trans)pilation through babel (ESNext JS & TypeScript)
-
   const defaultIgnore = [
     ...IGNORE_BUILD,
     ...IGNORE_TESTS,
     ...IGNORE_TESTENV,
     ...IGNORE_PACKAGES,
-  ].join(',');
-  const testEnvIgnore = [
-    ...IGNORE_BUILD,
-    ...IGNORE_TESTS,
-    ...IGNORE_PACKAGES,
-  ].join(',');
+  ];
+  const testEnvIgnore = [...IGNORE_BUILD, ...IGNORE_TESTS, ...IGNORE_PACKAGES];
 
-  const babelConfigs = [
+  const outputs = [
     {
       outDir: 'es',
       ignore: defaultIgnore,
       env: {
-        BABEL_MODULES: false,
-        NO_COREJS_POLYFILL: true,
+        SWC_MODULE_TYPE: 'es6',
       },
     },
     {
       outDir: 'lib',
       ignore: defaultIgnore,
       env: {
-        NO_COREJS_POLYFILL: true,
+        SWC_MODULE_TYPE: 'commonjs',
       },
     },
     {
       outDir: 'optimize/es',
       ignore: defaultIgnore,
-      configFile: './.babelrc-optimize.js',
       env: {
-        BABEL_MODULES: false,
-        NO_COREJS_POLYFILL: true,
+        SWC_MODULE_TYPE: 'es6',
+        EUI_BUILD_ENV: 'optimize',
       },
     },
     {
       outDir: 'optimize/lib',
       ignore: defaultIgnore,
-      configFile: './.babelrc-optimize.js',
       env: {
-        NO_COREJS_POLYFILL: true,
+        SWC_MODULE_TYPE: 'commonjs',
+        EUI_BUILD_ENV: 'optimize',
       },
     },
     {
       outDir: 'test-env',
       ignore: testEnvIgnore,
-      configFile: './.babelrc-test-env.js',
       env: {
-        NO_COREJS_POLYFILL: true,
+        SWC_MODULE_TYPE: 'commonjs',
+        EUI_BUILD_ENV: 'test-env',
       },
     },
   ];
 
   if (process.argv.includes('--no-parallel')) {
-    for (const config of babelConfigs) {
-      await runBabel(config);
+    for (const output of outputs) {
+      await runSwc(output);
     }
   } else {
-    const results = await Promise.allSettled(babelConfigs.map(runBabel));
+    const results = await Promise.allSettled(outputs.map(runSwc));
     const failed = results.filter((r) => r.status === 'rejected');
     if (failed.length) {
-      throw new Error(`${failed.length} Babel builds failed`);
+      throw new Error(`${failed.length} SWC builds failed`);
     }
   }
 
@@ -239,6 +243,9 @@ async function compileBundle() {
   const distDir = path.join(packageRootDir, 'dist');
 
   await fs.mkdir(distDir);
+
+  // First, generate all the necessary .d.ts files from the .ts files
+  execSync('tsc -p tsconfig.test-dts.json', { stdio: 'inherit' });
 
   console.log('Building test utils .d.ts files...');
 
