@@ -7098,6 +7098,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@elastic/eui-illustrations@workspace:*, @elastic/eui-illustrations@workspace:^, @elastic/eui-illustrations@workspace:packages/illustrations":
+  version: 0.0.0-use.local
+  resolution: "@elastic/eui-illustrations@workspace:packages/illustrations"
+  dependencies:
+    "@babel/cli": "npm:^7.26.4"
+    "@babel/core": "npm:^7.26.9"
+    "@babel/preset-env": "npm:^7.26.9"
+    "@babel/preset-typescript": "npm:^7.26.0"
+    "@types/jest": "npm:^29.5.12"
+    jest: "npm:^29.7.0"
+    rimraf: "npm:^6.0.1"
+    svgo: "npm:^3.0.2"
+    typescript: "npm:^5.7.3"
+  languageName: unknown
+  linkType: soft
+
 "@elastic/eui-monorepo@workspace:.":
   version: 0.0.0-use.local
   resolution: "@elastic/eui-monorepo@workspace:."
@@ -7255,6 +7271,7 @@ __metadata:
     "@elastic/eui-docgen": "workspace:^"
     "@elastic/eui-docusaurus-preset": "workspace:^"
     "@elastic/eui-docusaurus-theme": "workspace:^"
+    "@elastic/eui-illustrations": "workspace:^"
     "@elastic/eui-theme-common": "workspace:^"
     "@emotion/css": "npm:^11.11.2"
     "@emotion/react": "npm:^11.11.4"
@@ -7307,6 +7324,7 @@ __metadata:
     "@elastic/charts": "npm:^64.1.0"
     "@elastic/datemath": "npm:^5.0.3"
     "@elastic/eslint-plugin-eui": "workspace:*"
+    "@elastic/eui-illustrations": "workspace:*"
     "@elastic/eui-theme-borealis": "workspace:*"
     "@elastic/eui-theme-common": "workspace:*"
     "@elastic/prismjs-esql": "npm:^1.1.2"
