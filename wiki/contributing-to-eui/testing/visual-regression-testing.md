@@ -61,14 +61,23 @@ If a story can't render correctly under a particular variant, opt out of just th
 
 ## Filtering stories
 
-Pass any [`test-storybook`](https://storybook.js.org/docs/writing-tests/test-runner) flags after `--`:
+Pass any [`test-storybook`](https://storybook.js.org/docs/writing-tests/test-runner) flags after `--`. Jest path filters need `--` before the pattern:
 
 ```shell
-# Only run stories with a specific tag
-yarn workspace @elastic/eui test-visual-regression -- --includeTags vrt-only
+# By story name
+yarn workspace @elastic/eui test-visual-regression -- -- euibutton
+# By story file
+yarn workspace @elastic/eui test-visual-regression -- -- --testPathPattern=button.stories
 
-# Exclude stories with a tag
+# By tag
+yarn workspace @elastic/eui test-visual-regression -- --includeTags vrt-only
 yarn workspace @elastic/eui test-visual-regression -- --excludeTags skip-vrt
+```
+
+The wrapper runs both variants. For one variant only:
+
+```shell
+VRT_VARIANT=desktop yarn workspace @elastic/eui test-storybook -- euibutton
 ```
 
 ## Skipping stories
