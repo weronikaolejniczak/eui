@@ -211,20 +211,27 @@ export default () => {
                   <EuiTitle size="m">
                     <h2 id={customFlyoutTitleId}>Let&apos;s get started!</h2>
                   </EuiTitle>
-                  <EuiToolTip content={closeModalLabel} disableScreenReaderOutput>
-                    <EuiButtonIcon
-                      iconType="cross"
-                      aria-label={closeModalLabel}
-                      onClick={closeCustomFlyout}
-                      onKeyDown={onKeyDown}
-                      color="text"
-                      css={css`
-                        position: absolute;
-                        inset-block-start: ${euiTheme.size.base};
-                        inset-inline-end: ${euiTheme.size.base};
-                      `}
-                    />
-                  </EuiToolTip>
+                  <div
+                    css={css`
+                      position: absolute;
+                      inset-block-start: ${euiTheme.size.base};
+                      inset-inline-end: ${euiTheme.size.base};
+                    `}
+                  >
+                    <EuiToolTip
+                      content={closeModalLabel}
+                      disableScreenReaderOutput
+                      repositionOnScroll
+                    >
+                      <EuiButtonIcon
+                        iconType="cross"
+                        aria-label={closeModalLabel}
+                        onClick={closeCustomFlyout}
+                        onKeyDown={onKeyDown}
+                        color="text"
+                      />
+                    </EuiToolTip>
+                  </div>
                   <EuiHorizontalRule />
                 </div>
                 {/* Flyout Body */}
