@@ -158,9 +158,6 @@ rendered correctly and not cut-off after scrolling */
 export const VirtualizedCodeBlockScrolling: Story = {
   tags: ['vrt-only'],
   parameters: {
-    vrt: {
-      skip: true,
-    },
     codeSnippet: {
       skip: true,
     },
