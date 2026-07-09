@@ -6,22 +6,27 @@
  * Side Public License, v 1.
  */
 
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
+import { css } from '@emotion/react';
 
 import { illustrations } from '@elastic/eui-illustrations';
 
-import { EuiIllustration, EuiIllustrationProps } from './illustration';
+import { hideStorybookControls } from '../../../.storybook/utils';
+import { useEuiTheme } from '../../services';
+import { EuiButton } from '../button';
+import { EuiEmptyPrompt } from '../empty_prompt';
+import {
+  EuiIllustration,
+  EuiIllustrationProps,
+  EuiIllustrationSource,
+} from './illustration';
 
 const illustrationIds = Object.keys(illustrations);
 
 const meta: Meta<EuiIllustrationProps> = {
   title: 'Display/EuiIllustration',
   component: EuiIllustration,
-  parameters: {
-    // Illustration assets are owned by the independently versioned
-    // `@elastic/eui-illustrations` package, so they shouldn't gate EUI VRT.
-    vrt: { skip: true },
-  },
   argTypes: {
     type: {
       options: illustrationIds,
@@ -33,10 +38,97 @@ const meta: Meta<EuiIllustrationProps> = {
   args: {
     // @ts-expect-error - `type` is a string in the `argTypes` to allow for selection in Storybook
     type: illustrationIds[0],
+    fullWidth: true,
   },
 };
 
 export default meta;
 type Story = StoryObj<EuiIllustrationProps>;
 
-export const Playground: Story = {};
+export const Playground: Story = {
+  parameters: {
+    // Illustration assets are owned by the independently versioned
+    // `@elastic/eui-illustrations` package, so they shouldn't gate EUI VRT.
+    vrt: { skip: true },
+  },
+  args: {
+    fullWidth: false,
+  },
+};
+
+export const EmptyPrompt: Story = {
+  parameters: {
+    vrt: { skip: true },
+  },
+  render: () => (
+    <EuiEmptyPrompt
+      title={<h2>Create your first dashboard</h2>}
+      layout="horizontal"
+      color="plain"
+      icon={<EuiIllustration type={illustrations.dashboard} alt="" />}
+      body={
+        <p>
+          Dashboards are a great way to visualize and share your data. Start by
+          creating a new dashboard or loading a sample data set.
+        </p>
+      }
+      actions={
+        <EuiButton color="primary" fill>
+          Create dashboard
+        </EuiButton>
+      }
+    />
+  ),
+};
+hideStorybookControls(EmptyPrompt, ['type']);
+
+/**
+ * VRT only
+ */
+
+export const Sizing: Story = {
+  tags: ['vrt-only'],
+  render: () => <SizingExample />,
+};
+
+export const SizingFullWidth: Story = {
+  tags: ['vrt-only'],
+  render: () => <SizingExample fullWidth />,
+};
+
+/**
+ * Helpers
+ */
+
+/**
+ * Fixture SVG for VRT. Uses a fixed width smaller than the parent container
+ * so VRT snapshots can verify sizing without depending on `@elastic/eui-illustrations`.
+ */
+const vrtFixture: EuiIllustrationSource = {
+  id: 'vrt-fixture',
+  title: 'VRT fixture',
+  light: `<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="100" fill="#6B8CFF" />
+    <rect x="80" y="30" width="40" height="40" fill="#FFFFFF" />
+  </svg>`,
+  dark: `<svg width="200" height="100" viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="100" fill="#1D2A6E" />
+    <rect x="80" y="30" width="40" height="40" fill="#6B8CFF" />
+  </svg>`,
+};
+
+const VRT_CONTAINER_WIDTH = 360;
+
+const SizingExample = ({ fullWidth = false }: { fullWidth?: boolean }) => {
+  const { euiTheme } = useEuiTheme();
+  const containerStyles = css`
+    inline-size: ${VRT_CONTAINER_WIDTH}px;
+    padding: ${euiTheme.size.m};
+  `;
+
+  return (
+    <div css={containerStyles}>
+      <EuiIllustration type={vrtFixture} alt="" fullWidth={fullWidth} />
+    </div>
+  );
+};

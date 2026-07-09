@@ -50,18 +50,25 @@ export type EuiIllustrationProps = Omit<
      * `title`. Pass an empty string to mark the illustration as decorative.
      */
     alt?: string;
+    /**
+     * When `true`, stretches the SVG to fill the full width of its container.
+     * When `false`, the SVG maintains its intrinsic width.
+     * Defaults to `true`.
+     */
+    fullWidth?: boolean;
   };
 
 export const EuiIllustration: FunctionComponent<EuiIllustrationProps> = ({
   type,
   alt,
   className,
+  fullWidth = true,
   ...rest
 }) => {
   const { colorMode } = useEuiTheme();
   const styles = useEuiMemoizedStyles(euiIllustrationStyles);
   const classes = classNames('euiIllustration', className);
-  const cssStyles = [styles.euiIllustration];
+  const cssStyles = [styles.euiIllustration, fullWidth && styles.fullWidth];
 
   const svg = colorMode === 'DARK' ? type.dark : type.light;
 

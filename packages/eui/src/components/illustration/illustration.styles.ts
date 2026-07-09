@@ -22,4 +22,8 @@ export const euiIllustrationStyles = (_euiThemeContext: UseEuiTheme) => ({
       ${logicalCSS('height', 'auto')}
     }
   `,
+  fullWidth: css`
+    display: block;
+    ${logicalCSS('width', '100%')}
+  `,
 });

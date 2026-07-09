@@ -123,10 +123,6 @@ export const IllustrationGallery = () => {
                       background-color: ${euiTheme.colors.lightestShade};
                       border-radius: ${euiTheme.border.radius.medium};
                       margin-bottom: ${euiTheme.size.s};
-
-                      & > * {
-                        inline-size: 100%;
-                      }
                     `}
                   >
                     <EuiIllustration type={item} alt="" />
