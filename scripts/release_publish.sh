@@ -60,7 +60,7 @@ trap cleanup EXIT
 queue_release() {
   local tag="$1" title="$2" body="$3" body_file
   git rev-parse "$tag" &>/dev/null && error "Tag ${tag} already exists. Has this release already been published?"
-  body_file=$(mktemp)
+  body_file=$(make_temp_file)
   printf '%s\n' "$body" > "$body_file"
   REL_TAGS+=("$tag")
   REL_TITLES+=("$title")
@@ -115,7 +115,7 @@ fi
 if [[ "$EUI_RELEASED" == "true" ]]; then
   eui_tag="v${EUI_VERSION}"
   git rev-parse "$eui_tag" &>/dev/null && error "Tag ${eui_tag} already exists. Has this release already been published?"
-  eui_body_file=$(mktemp)
+  eui_body_file=$(make_temp_file)
   printf '%s\n' "$RELEASE_BODY" > "$eui_body_file"
   REL_TAGS=("$eui_tag" ${REL_TAGS[@]+"${REL_TAGS[@]}"})
   REL_TITLES=("$eui_tag" ${REL_TITLES[@]+"${REL_TITLES[@]}"})

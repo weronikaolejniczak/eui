@@ -92,3 +92,8 @@ pkg_field() {
 url_encode() {
   node -p "encodeURIComponent(process.argv[1])" "$1"
 }
+
+# Create a temp file. BSD/macOS mktemp requires a template with `XXXXXX`.
+make_temp_file() {
+  mktemp "${TMPDIR:-/tmp}/eui-release.XXXXXX"
+}
