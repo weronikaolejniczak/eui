@@ -128,9 +128,6 @@ export const Minimal: Story = {
 
 export const Compact: Story = {
   tags: ['vrt-only'],
-  parameters: {
-    vrt: { skip: true },
-  },
   args: {
     fontSize: 's',
     cellPadding: 's',
