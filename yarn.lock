@@ -7384,6 +7384,7 @@ __metadata:
     expose-gc: "npm:^1.0.0"
     findup: "npm:^0.1.5"
     glob: "npm:^11.0.3"
+    http-server: "npm:^14.1.1"
     inquirer: "npm:^9.1.4"
     jest: "npm:^29.7.0"
     jest-cli: "npm:^29.7.0"
