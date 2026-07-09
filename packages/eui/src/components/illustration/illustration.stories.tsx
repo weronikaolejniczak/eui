@@ -7,12 +7,12 @@
  */
 
 import React from 'react';
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj, StoryContext } from '@storybook/react';
 import { css } from '@emotion/react';
 
 import { illustrations } from '@elastic/eui-illustrations';
 
-import { hideStorybookControls } from '../../../.storybook/utils';
+import { hideAllStorybookControls } from '../../../.storybook/utils';
 import { useEuiTheme } from '../../services';
 import { EuiButton } from '../button';
 import { EuiEmptyPrompt } from '../empty_prompt';
@@ -50,17 +50,56 @@ export const Playground: Story = {
     // Illustration assets are owned by the independently versioned
     // `@elastic/eui-illustrations` package, so they shouldn't gate EUI VRT.
     vrt: { skip: true },
+    codeSnippet: {
+      snippet: (context: StoryContext<EuiIllustrationProps>) => {
+        const { type, alt, fullWidth } = context.unmappedArgs;
+        const props = [`type={${type}}`];
+
+        if (alt != null) props.push(`alt=${JSON.stringify(alt)}`);
+        if (fullWidth) props.push('fullWidth');
+
+        return `import { ${type} } from '@elastic/eui-illustrations';
+        
+        <EuiIllustration ${props.join(' ')} />`;
+      },
+    },
   },
   args: {
     fullWidth: false,
   },
 };
 
+const EUI_EMPTY_PROMPT_SNIPPET = `
+import { dashboard } from '@elastic/eui-illustrations';
+
+<EuiEmptyPrompt
+  title={<h2>Create your first dashboard</h2>}
+  layout="horizontal"
+  color="plain"
+  icon={<EuiIllustration type={dashboard} alt="" />}
+  body={
+    <p>
+      Dashboards are a great way to visualize and share your data. Start by
+      creating a new dashboard or loading a sample data set.
+    </p>
+  }
+  actions={
+    <EuiButton color="primary" fill>
+      Create dashboard
+    </EuiButton>
+  }
+/>
+`;
+
 export const EmptyPrompt: Story = {
   parameters: {
     vrt: { skip: true },
+    codeSnippet: {
+      snippet: EUI_EMPTY_PROMPT_SNIPPET,
+    },
+    ...hideAllStorybookControls,
   },
-  render: () => (
+  render: (_args) => (
     <EuiEmptyPrompt
       title={<h2>Create your first dashboard</h2>}
       layout="horizontal"
@@ -80,7 +119,6 @@ export const EmptyPrompt: Story = {
     />
   ),
 };
-hideStorybookControls(EmptyPrompt, ['type']);
 
 /**
  * VRT only
@@ -88,12 +126,20 @@ hideStorybookControls(EmptyPrompt, ['type']);
 
 export const Sizing: Story = {
   tags: ['vrt-only'],
-  render: () => <SizingExample />,
+  parameters: {
+    codeSnippet: { skip: true },
+    ...hideAllStorybookControls,
+  },
+  render: (_args) => <SizingExample />,
 };
 
 export const SizingFullWidth: Story = {
   tags: ['vrt-only'],
-  render: () => <SizingExample fullWidth />,
+  parameters: {
+    codeSnippet: { skip: true },
+    ...hideAllStorybookControls,
+  },
+  render: (_args) => <SizingExample fullWidth />,
 };
 
 /**
