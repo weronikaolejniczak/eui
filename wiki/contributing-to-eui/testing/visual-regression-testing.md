@@ -4,6 +4,9 @@ EUI uses [Playwright Test Runner](https://playwright.dev/) with [`jest-image-sna
 
 Visual regression tests run automatically on every pull request against the deployed Storybook preview. When differences are found, a diff table is posted as a PR comment and a Buildkite block step appears for human approval before baselines are updated.
 
+> [!IMPORTANT]
+> VRT runs in **CI** which owns the baselines and auto-commits them to your PR. Run it locally only when you really need to verify that many stories render as expected.
+
 ## Running VRT locally
 
 Make sure you have [Docker](https://docs.docker.com/get-docker/) installed and running. It's used to take screenshots in a Linux environment matching CI.
