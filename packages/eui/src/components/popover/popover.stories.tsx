@@ -64,7 +64,7 @@ export const Playground: Story = {
   render: (args) => <StatefulPopover {...args} />,
   play: playDecorator(async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await canvas.waitForEuiPopoverVisible();
+    await canvas.waitForEuiPopoverVisible('.euiPopover');
   }),
 };
 enableFunctionToggleControls(Playground, ['onPositionChange']);
