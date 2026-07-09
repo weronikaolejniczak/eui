@@ -141,7 +141,7 @@ fi
 
 step "4/6" "Creating and pushing tags..."
 if [[ ${#REL_TAGS[@]} -eq 0 ]]; then
-  echo "  (no taggable packages in this release)"
+  error "No taggable packages detected. If you intended to release a single package, add it to scripts/independent_packages.json (namespaced tags) or bump @elastic/eui (v<version> tag)."
 else
   for i in "${!REL_TAGS[@]}"; do
     echo -e "  ${BOLD}${REL_TAGS[$i]}${RESET}"
