@@ -44,6 +44,7 @@
     "release-rc": "node ./scripts/release.js --type=prerelease",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "serve-storybook": "http-server storybook-static --port 6006 --silent",
     "test-storybook": "test-storybook",
     "pre-push": "yarn test-staged",
     "prerelease": "node ./scripts/prerelease.mjs"
@@ -193,6 +194,7 @@
     "expose-gc": "^1.0.0",
     "findup": "^0.1.5",
     "glob": "^11.0.3",
+    "http-server": "^14.1.1",
     "inquirer": "^9.1.4",
     "jest": "^29.7.0",
     "jest-cli": "^29.7.0",
