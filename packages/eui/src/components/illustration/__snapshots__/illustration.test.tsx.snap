@@ -3,7 +3,7 @@
 exports[`EuiIllustration is rendered 1`] = `
 <span
   aria-label="aria-label"
-  class="euiIllustration testClass1 testClass2 emotion-euiIllustration-euiTestCss"
+  class="euiIllustration testClass1 testClass2 emotion-euiIllustration-fullWidth-euiTestCss"
   data-test-subj="test subject string"
   role="img"
 >
