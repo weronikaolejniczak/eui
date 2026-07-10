@@ -6,10 +6,13 @@
  * Side Public License, v 1.
  */
 
-export type { EuiCallOutProps } from './call_out';
-export { EuiCallOut } from './call_out';
-export type {
-  EuiCallOutColor,
-  EuiCallOutSize,
-  EuiCallOutHeading,
-} from './types';
+import React from 'react';
+import { EuiToolTip, EuiToolTipProps } from './tool_tip';
+
+export type WithEuiToolTipProps = Omit<EuiToolTipProps, 'children'>;
+
+export const withEuiToolTip = (
+  element: React.ReactElement,
+  tooltipProps?: WithEuiToolTipProps
+) =>
+  tooltipProps ? <EuiToolTip {...tooltipProps}>{element}</EuiToolTip> : element;

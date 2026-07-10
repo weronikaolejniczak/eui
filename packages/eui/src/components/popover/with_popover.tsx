@@ -6,10 +6,13 @@
  * Side Public License, v 1.
  */
 
-export type { EuiCallOutProps } from './call_out';
-export { EuiCallOut } from './call_out';
-export type {
-  EuiCallOutColor,
-  EuiCallOutSize,
-  EuiCallOutHeading,
-} from './types';
+import React from 'react';
+import { EuiPopover, EuiPopoverProps } from './popover';
+
+export type WithEuiPopoverProps = Omit<EuiPopoverProps, 'button'>;
+
+export const withEuiPopover = (
+  element: React.ReactElement,
+  popoverProps?: WithEuiPopoverProps
+) =>
+  popoverProps ? <EuiPopover {...popoverProps} button={element} /> : element;
