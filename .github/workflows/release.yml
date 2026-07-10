@@ -105,8 +105,6 @@ jobs:
       id-token: write # Required for OIDC (npm trusted publishing)
       contents: read
       actions: write # Required to dispatch the Kibana integration chain
-    outputs:
-      published_packages_json: ${{ steps.published_packages_info.outputs.json }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -198,8 +196,6 @@ jobs:
       needs.lint_and_unit_tests.result == 'success' &&
       needs.cypress_tests.result == 'success'
     needs: [ lint_and_unit_tests, cypress_tests ]
-    outputs:
-      published_packages_json: ${{ steps.published_packages_info.outputs.json }}
     steps:
       - uses: actions/checkout@v4
         with:
