@@ -160,12 +160,6 @@ jobs:
           result-encoding: string
       - name: Release
         run: yarn release run snapshot --skip-prompts --skip-auth-check --use-auth-token --allow-custom ${{ inputs.dry_run && '--dry-run' || ''}} ${{ steps.prepare_npm_tag_arg.outputs.result }} ${{ steps.prepare_workspaces_arg.outputs.result }}
-      - name: Output published packages info
-        id: published_packages_info
-        # language=bash
-        run: |
-          file_content=$(jq -c . .release/published_packages.json)
-          echo "json=$file_content" >> "$GITHUB_OUTPUT"
       - name: Trigger Kibana integration test
         # Keep `release.yml` as the npm trusted-publishing entry point; continue
         # the Kibana chain only after the snapshot package metadata exists.
@@ -255,9 +249,3 @@ jobs:
           result-encoding: string
       - name: Release
         run: yarn release run official --skip-prompts --skip-auth-check --use-auth-token --allow-custom --skip-update-versions ${{ inputs.dry_run && '--dry-run' || ''}} ${{ steps.prepare_npm_tag_arg.outputs.result }} ${{ steps.prepare_workspaces_arg.outputs.result }}
-      - name: Output published packages info
-        id: published_packages_info
-        # language=bash
-        run: |
-          file_content=$(jq -c . .release/published_packages.json)
-          echo "json=$file_content" >> "$GITHUB_OUTPUT"
