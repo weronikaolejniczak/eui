@@ -59,8 +59,8 @@ jobs:
             )
           else
             workflow_args+=(
-              "-f" "kibana_pr_title=${INPUT_PR_TITLE:-Update EUI dependencies}"
-              "-f" "kibana_pr_body=${INPUT_PR_BODY:-This PR updates EUI dependencies in Kibana}"
+              "-f" "kibana_pr_title=$INPUT_PR_TITLE"
+              "-f" "kibana_pr_body=$INPUT_PR_BODY"
             )
           fi
 
