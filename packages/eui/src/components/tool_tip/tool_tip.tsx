@@ -23,7 +23,7 @@ import React, {
 import classNames from 'classnames';
 
 import { CommonProps } from '../common';
-import { findPopoverPosition, htmlIdGenerator, keys } from '../../services';
+import { findPopoverPosition, useGeneratedHtmlId, keys } from '../../services';
 import { getRepositionOnScroll } from '../../services/popover/reposition_on_scroll';
 import { type EuiPopoverPosition } from '../../services/popover';
 import { EuiResizeObserver } from '../observer/resize_observer';
@@ -36,7 +36,7 @@ import { EuiToolTipArrow } from './tool_tip_arrow';
 import { toolTipManager } from './tool_tip_manager';
 
 export const POSITIONS = ['top', 'right', 'bottom', 'left'] as const;
-const DISPLAYS = ['inlineBlock', 'block'] as const;
+const DISPLAYS = ['inlineBlock', 'block', 'flex'] as const;
 
 export const DEFAULT_TOOLTIP_OFFSET = 16;
 
@@ -183,8 +183,8 @@ export const EuiToolTip = forwardRef<EuiToolTipRef, EuiToolTipProps>(
       Record<EuiPopoverPosition, number | string> | undefined
     >(undefined);
 
-    const generatedId = useRef(htmlIdGenerator()());
-    const id = idProp ?? generatedId.current;
+    const generatedId = useGeneratedHtmlId();
+    const id = idProp ?? generatedId;
 
     const anchorRef = useRef<HTMLSpanElement | null>(null);
     const popoverRef = useRef<HTMLDivElement | null>(null);

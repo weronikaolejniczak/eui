@@ -47,6 +47,7 @@ export const typeToPathMap = {
   addDataApp: withMetadata(() => import('./assets/app_add_data'), {
     category: 'app',
   }),
+  addToChat: () => import('./assets/add_to_chat'),
   addToDashboard: withMetadata(() => import('./assets/add_to_dashboard'), {
     synonyms: [
       'dashboard',
@@ -1287,6 +1288,9 @@ export const typeToPathMap = {
     category: 'thirdPartyLogo',
   }),
   logoUptime: withMetadata(() => import('./assets/logo_uptime'), {
+    category: 'elasticLogo',
+  }),
+  logoVectorDB: withMetadata(() => import('./assets/logo_vector_db'), {
     category: 'elasticLogo',
   }),
   logoVulnerabilityManagement: withMetadata(

@@ -85,9 +85,7 @@ describe('EuiSelectable', () => {
         .realClick()
         .realType('enc')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Enceladus');
+          cy.get('li[role=option]').first().should('contain.text', 'Enceladus');
         });
     });
 
@@ -99,9 +97,7 @@ describe('EuiSelectable', () => {
         .realClick()
         .realType('enc')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Enceladus');
+          cy.get('li[role=option]').first().should('contain.text', 'Enceladus');
         });
 
       // Clear search using ENTER
@@ -109,9 +105,7 @@ describe('EuiSelectable', () => {
         .focus()
         .realPress('{enter}')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Titan');
+          cy.get('li[role=option]').first().should('contain.text', 'Titan');
         });
 
       // Search/filter again
@@ -119,9 +113,7 @@ describe('EuiSelectable', () => {
         .realClick()
         .realType('enc')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Enceladus');
+          cy.get('li[role=option]').first().should('contain.text', 'Enceladus');
         });
 
       // Clear search using SPACE
@@ -129,9 +121,7 @@ describe('EuiSelectable', () => {
         .focus()
         .realPress('Space')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Titan');
+          cy.get('li[role=option]').first().should('contain.text', 'Titan');
         });
 
       // Ensure the clear button does not respond to up/down arrow keys
@@ -139,23 +129,17 @@ describe('EuiSelectable', () => {
         .realClick()
         .realType('titan')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Titan');
+          cy.get('li[role=option]').first().should('contain.text', 'Titan');
         });
       cy.get('[data-test-subj="clearSearchButton"]')
         .focus()
         .realPress('ArrowDown')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Titan');
+          cy.get('li[role=option]').first().should('contain.text', 'Titan');
         })
         .realPress('ArrowUp')
         .then(() => {
-          cy.get('li[role=option]')
-            .first()
-            .should('have.attr', 'title', 'Titan');
+          cy.get('li[role=option]').first().should('contain.text', 'Titan');
         });
     });
 
@@ -221,6 +205,41 @@ describe('EuiSelectable', () => {
             { ...options[2], checked: 'on' },
           ]);
         });
+    });
+
+    describe('with groups', () => {
+      it('renders filtered options with the correct height after searching', () => {
+        const groupOptions = [
+          { label: 'Group 1', isGroupLabel: true },
+          { label: 'Option A' },
+          { label: 'Group 2', isGroupLabel: true },
+          { label: 'Option B' },
+          { label: 'Option C' },
+        ];
+
+        cy.realMount(
+          <EuiSelectable searchable options={groupOptions}>
+            {(list, search) => (
+              <>
+                {search}
+                {list}
+              </>
+            )}
+          </EuiSelectable>
+        );
+
+        cy.get('input').realClick().realType('Option');
+
+        cy.get('li[role=option]')
+          .should('have.length', 3)
+          .then(($options) => {
+            const firstHeight = $options.eq(0).outerHeight();
+
+            $options.each((_, el) => {
+              expect(Cypress.$(el).outerHeight()).to.eq(firstHeight);
+            });
+          });
+      });
     });
   });
 

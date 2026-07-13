@@ -355,6 +355,13 @@ export class EuiSelectableList<T> extends Component<
       prevProps.visibleOptions !== visibleOptions ||
       prevProps.options !== options
     ) {
+      // Invalidate react-window's size cache before setState triggers a re-render
+      // to ensure that heights are re-calculated to prevent stale cached heights.
+      // Applies `shouldForceUpdate=false` to avoid an unnecessary extra render.
+      if (isVirtualized) {
+        this.listRef?.resetAfterIndex(0, false);
+      }
+
       this.setState({
         optionArray,
         itemData: { ...optionArray },
@@ -493,7 +500,11 @@ export class EuiSelectableList<T> extends Component<
           this.onAddOrRemoveOption(option, event);
         }}
         isFocused={isFocused}
-        title={searchableLabel || label}
+        title={
+          !truncationProps && !option.toolTipContent
+            ? searchableLabel || label
+            : undefined
+        }
         checked={checked}
         disabled={disabled}
         prepend={prepend}
