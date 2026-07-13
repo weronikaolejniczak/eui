@@ -167,7 +167,7 @@ jobs:
       - name: Check status
         id: check_status
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.ephemeral_token.outputs.token }}
           PR_URL: ${{ needs.open_pr.outputs.pr_url }}
         # language=bash
         run: |
@@ -209,7 +209,7 @@ jobs:
           vault-role: token-policy-6becee3e5a43
       - name: Check status
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.ephemeral_token.outputs.token }}
           PR_URL: ${{ needs.open_pr.outputs.pr_url }}
         # language=bash
         run: |
