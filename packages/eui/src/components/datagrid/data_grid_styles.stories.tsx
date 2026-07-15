@@ -9,10 +9,9 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { css } from '@emotion/css';
+
 import { enableFunctionToggleControls } from '../../../.storybook/utils';
-import { VRT_SELECTORS, playDecorator } from '../../../.storybook/vrt';
-import { waitFor, expect } from '@storybook/test';
-import { within } from '../../../.storybook/test';
+import { VRT_SELECTORS } from '../../../.storybook/vrt';
 
 import {
   StatefulDataGrid,
@@ -133,14 +132,8 @@ export const Compact: Story = {
     cellPadding: 's',
   },
   render: (gridStyle) => (
-    <StatefulDataGrid {...storyArgs} gridStyle={gridStyle} />
+    <StatefulDataGrid {...storyArgs} gridStyle={gridStyle} height="auto" />
   ),
-  play: playDecorator(async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    await waitFor(() =>
-      expect(canvas.getAllByRole('gridcell').length).toBeGreaterThan(0)
-    );
-  }),
 };
 
 export const Expanded: Story = {
