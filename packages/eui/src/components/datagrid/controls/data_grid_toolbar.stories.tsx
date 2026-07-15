@@ -108,6 +108,12 @@ export const ToolbarVisibilityOptions: StoryObj<EuiDataGridToolBarVisibilityOpti
         toolbarVisibility={toolbarVisibility}
       />
     ),
+    play: playDecorator(async ({ canvasElement }) => {
+      const canvas = within(canvasElement);
+      await waitFor(() =>
+        expect(canvas.getAllByRole('gridcell').length).toBeGreaterThan(0)
+      );
+    }),
   };
 
 export const AdditionalControlsOptions: StoryObj<EuiDataGridToolBarAdditionalControlsOptions> =
