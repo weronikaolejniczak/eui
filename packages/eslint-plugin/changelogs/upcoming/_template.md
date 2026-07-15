@@ -1,20 +1,16 @@
-- Added `EuiComponentA`
+- Added new `@elastic/eui/rule-name` rule
 
 **Bug fixes**
 
-- Fixed `EuiComponentB`
+- Fixed `@elastic/eui/rule-name`...
 
 **Deprecations**
 
-- Deprecated `EuiComponentC`
+- Deprecated `@elastic/eui/rule-name` rule in favour of `@elastic/eui/new-rule-name`
 
 **Breaking changes**
 
-- Removed `EuiComponentD`
-
-**CSS-in-JS conversions**
-
-- Converted `EuiComponent` to Emotion; Removed `$euiComponentSassVariable`
+- Removed `@elastic/eui/rule-name` rule
 
 **Dependency updates**
 
