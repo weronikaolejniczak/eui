@@ -1,4 +1,4 @@
-const { execSync, spawn } = require('child_process');
+const { execSync, spawn, spawnSync } = require('child_process');
 const fs = require('fs');
 const net = require('net');
 const path = require('path');
@@ -89,6 +89,15 @@ const waitForPort = async (port, timeout = 30000) => {
 
 const stopStaticServer = (server) => {
   if (!server?.pid) return;
+
+  if (process.platform === 'win32') {
+    spawnSync(
+      'taskkill',
+      ['/pid', server.pid.toString(), '/t', '/f'],
+      { stdio: 'ignore' }
+    );
+    return;
+  }
 
   try {
     process.kill(-server.pid);
