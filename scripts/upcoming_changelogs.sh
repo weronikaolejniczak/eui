@@ -6,41 +6,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-REF='HEAD'
-
-usage() {
-  echo "Usage: $0 [--ref <git-ref>]"
-}
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --ref)
-      REF="${2:-}"
-      shift 2
-      ;;
-    --help|-h)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown argument: $1" >&2
-      usage >&2
-      exit 1
-      ;;
-  esac
-done
-
-if [[ -z "$REF" ]]; then
-  usage >&2
-  exit 1
-fi
-
-PACKAGES_DIR="$ROOT_DIR/packages"
-
-if [[ ! -d "$PACKAGES_DIR" ]]; then
-  echo "Packages directory not found: $PACKAGES_DIR" >&2
-  exit 1
-fi
+REF="${1:-HEAD}"
 
 # Prepare temporary storage for sorting changelog entries by PR number
 entries_file="$(mktemp "${TMPDIR:-/tmp}/eui-upcoming-changelogs-entries.XXXXXX")"

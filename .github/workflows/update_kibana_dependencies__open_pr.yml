@@ -95,7 +95,7 @@ jobs:
 
           if [[ "$NIGHTLY" == "true" ]]; then
             compare_url="https://github.com/elastic/eui/compare/$EUI_LAST_RELEASE...$EUI_REF"
-            changelog_entries="$(scripts/upcoming_changelogs.sh --ref "$EUI_REF")"
+            changelog_entries="$(scripts/upcoming_changelogs.sh "$EUI_REF")"
 
             PR_BODY="$(
               printf '%s\n' \
