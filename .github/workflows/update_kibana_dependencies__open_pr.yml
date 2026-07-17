@@ -95,19 +95,7 @@ jobs:
 
           if [[ "$NIGHTLY" == "true" ]]; then
             compare_url="https://github.com/elastic/eui/compare/$EUI_LAST_RELEASE...$EUI_REF"
-            changelog_entries=''
-            while IFS= read -r changelog_file; do
-              changelog_number="$(basename "$changelog_file" .md)"
-              changelog_url="https://github.com/elastic/eui/blob/$EUI_REF/$changelog_file"
-              if [[ -n "$changelog_entries" ]]; then
-                changelog_entries+=$'\n\n'
-              fi
-              changelog_entries+="### [#$changelog_number]($changelog_url)"$'\n\n'
-              changelog_entries+="$(< "$changelog_file")"
-            done < <(
-              find packages/eui/changelogs/upcoming -maxdepth 1 -type f \
-                -name '*.md' ! -name '_template.md' | sort
-            )
+            changelog_entries="$(scripts/upcoming_changelogs.sh --ref "$EUI_REF")"
 
             PR_BODY="$(
               printf '%s\n' \
@@ -118,9 +106,9 @@ jobs:
                 "- **EUI commit:** [\`${EUI_REF:0:12}\`](https://github.com/elastic/eui/commit/$EUI_REF)" \
                 '' \
                 '<details>' \
-                '<summary>Upcoming @elastic/eui changelog entries</summary>' \
+                '<summary>Upcoming changelog entries</summary>' \
                 '' \
-                "${changelog_entries:-_No upcoming changelog entries._}" \
+                "$changelog_entries" \
                 '' \
                 '</details>'
             )"
