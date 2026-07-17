@@ -232,6 +232,8 @@ jobs:
       pending: ${{ steps.check_status.outputs.pending }}
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
       # Token cannot be reused in this job because it's short-lived
       - name: Fetch GitHub token
         id: ephemeral_token
@@ -245,43 +247,7 @@ jobs:
           GH_TOKEN: ${{ steps.ephemeral_token.outputs.token }}
           PR_URL: ${{ needs.open_pr.outputs.pr_url }}
         # language=bash
-        run: |
-          all_status_json="$(gh pr checks "$PR_URL" --json name,link,bucket || true)"
-          if jq -e 'type == "array"' > /dev/null <<< "$all_status_json"; then
-            buildkite_url="$(
-              jq -r '[.[] | select((.link // "") | contains("buildkite.com"))][0].link // empty' \
-                <<< "$all_status_json"
-            )"
-            echo "buildkite_url=$buildkite_url" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::Could not retrieve the Buildkite URL"
-          fi
-
-          status_json="$(gh pr checks "$PR_URL" --required --json name,link,bucket || true)"
-          if ! jq -e 'type == "array" and length > 0' > /dev/null <<< "$status_json"; then
-            echo "::error::No required CI checks were returned"
-            exit 1
-          fi
-
-          all_num="$(jq length <<< "$status_json")"
-          pending_num="$(jq '[.[] | select(.bucket == "pending")] | length' <<< "$status_json")"
-          fail_num="$(jq '[.[] | select(.bucket | test("fail|cancel"))] | length' <<< "$status_json")"
-
-          if [[ "$fail_num" -gt 0 ]]; then
-            echo "Some CI checks failed. Please check the logs for details."
-            echo "Some CI checks failed. Please check the logs for details." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-          if [[ "$pending_num" -gt 0 ]]; then
-            echo "pending=true" >> "$GITHUB_OUTPUT"
-            echo "$pending_num/$all_num CI checks are pending. Retrying later..."
-            echo "$pending_num/$all_num CI checks are pending. Retrying later..." >> $GITHUB_STEP_SUMMARY
-            exit 0
-          fi
-
-          echo "CI checks passed!"
-          echo "CI checks passed! :tada:" >> $GITHUB_STEP_SUMMARY
+        run: scripts/check_pr_status.sh "$PR_URL" retry
   check_ci_status_2:
     name: Check CI status - attempt 2/2
     runs-on: ubuntu-slim
@@ -291,6 +257,8 @@ jobs:
     outputs:
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
       # Token cannot be reused in this job because it's short-lived
       - name: Fetch GitHub token
         id: ephemeral_token
@@ -304,42 +272,7 @@ jobs:
           GH_TOKEN: ${{ steps.ephemeral_token.outputs.token }}
           PR_URL: ${{ needs.open_pr.outputs.pr_url }}
         # language=bash
-        run: |
-          all_status_json="$(gh pr checks "$PR_URL" --json name,link,bucket || true)"
-          if jq -e 'type == "array"' > /dev/null <<< "$all_status_json"; then
-            buildkite_url="$(
-              jq -r '[.[] | select((.link // "") | contains("buildkite.com"))][0].link // empty' \
-                <<< "$all_status_json"
-            )"
-            echo "buildkite_url=$buildkite_url" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::Could not retrieve the Buildkite URL"
-          fi
-
-          status_json="$(gh pr checks "$PR_URL" --required --json name,link,bucket || true)"
-          if ! jq -e 'type == "array" and length > 0' > /dev/null <<< "$status_json"; then
-            echo "::error::No required CI checks were returned"
-            exit 1
-          fi
-
-          all_num="$(jq length <<< "$status_json")"
-          pending_num="$(jq '[.[] | select(.bucket == "pending")] | length' <<< "$status_json")"
-          fail_num="$(jq '[.[] | select(.bucket | test("fail|cancel"))] | length' <<< "$status_json")"
-
-          if [[ "$fail_num" -gt 0 ]]; then
-            echo "Some CI checks failed. Please check the logs for details."
-            echo "Some CI checks failed. Please check the logs for details." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-          if [[ "$pending_num" -gt 0 ]]; then
-            echo "$pending_num/$all_num CI checks are still pending. This is unexpected."
-            echo "$pending_num/$all_num CI checks are still pending. This is unexpected." >> $GITHUB_STEP_SUMMARY
-            exit 1
-          fi
-
-          echo "CI checks passed!"
-          echo "CI checks passed! :tada:" >> $GITHUB_STEP_SUMMARY
+        run: scripts/check_pr_status.sh "$PR_URL" fail
   report_status:
     name: Report CI status
     runs-on: ubuntu-slim
