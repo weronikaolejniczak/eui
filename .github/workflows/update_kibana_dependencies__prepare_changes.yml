@@ -56,16 +56,13 @@ jobs:
   update:
     name: Prepare changes
     runs-on: ubuntu-latest
-    outputs:
-      branch_name: ${{ steps.git_branch.outputs.BRANCH_NAME }}
     steps:
       - name: Verify dependencies input
         env:
           DEPENDENCIES: ${{ inputs.dependencies }}
         # language=bash
         run: |
-          num_deps=$(jq 'map(select(has("name") and has("version"))) | length' <<< "$DEPENDENCIES") || exit_code=$?
-          if [[ "$exit_code" -ne 0 ]]; then
+          if ! num_deps="$(jq 'map(select(has("name") and has("version"))) | length' <<< "$DEPENDENCIES")"; then
             echo "::error::Invalid dependencies input"
             exit 2
           elif [[ "$num_deps" -eq 0 ]]; then
