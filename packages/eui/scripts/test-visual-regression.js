@@ -279,11 +279,14 @@ const runNativeTests = async () => {
 
     staticServer = await startStaticServer();
 
-    process.on('exit', () => stopStaticServer(staticServer));
-    process.on('SIGINT', () => {
+    const stopStaticServerAndExit = () => {
       stopStaticServer(staticServer);
       process.exit(1);
-    });
+    };
+
+    process.on('exit', () => stopStaticServer(staticServer));
+    process.on('SIGINT', stopStaticServerAndExit);
+    process.on('SIGTERM', stopStaticServerAndExit);
   }
 
   const baseCmd = [
