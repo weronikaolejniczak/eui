@@ -37,6 +37,7 @@ export const Playground: Story = {
     label: 'Beta',
   },
   render: (args: EuiBetaBadgeProps) => (
+    // Prevent the inline badge from being cropped in VRT screenshots.
     <div css={{ display: 'inline-block' }}>
       <EuiBetaBadge {...args} />
     </div>
