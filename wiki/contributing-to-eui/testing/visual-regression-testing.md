@@ -35,7 +35,7 @@ yarn workspace @elastic/eui test-visual-regression -- --no-build
 yarn workspace @elastic/eui test-visual-regression -- --no-static
 ```
 
-`--static`/`--build` default on locally and are ignored when `--url` is set.
+`--static`/`--build` default locally and are ignored when `--url` is set.
 
 ## Updating baseline screenshots
 
