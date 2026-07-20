@@ -1,4 +1,4 @@
-const { execSync, spawn, spawnSync } = require('child_process');
+const { execFileSync, execSync, spawn, spawnSync } = require('child_process');
 const fs = require('fs');
 const net = require('net');
 const path = require('path');
@@ -201,14 +201,28 @@ if (useDocker) {
     'yarn playwright install chromium',
   ].join(' && ');
 
-  // `--network=host` lets containers reach host services on Linux;
-  // Docker Desktop on macOS handles `host.docker.internal` automatically
-  const networkFlag = process.platform === 'linux' ? '--network=host ' : '';
+  const runInDocker = (innerCmd) => {
+    const dockerArgs = [
+      'run',
+      '--rm',
+      '-i',
+      '--platform',
+      'linux/amd64',
+      // `--network=host` lets containers reach host services on Linux;
+      // Docker Desktop on macOS handles `host.docker.internal` automatically
+      process.platform === 'linux' && '--network=host',
+      '-v',
+      `${REPO_ROOT}:/work`,
+      '-w',
+      '/work',
+      dockerImage,
+      'bash',
+      '-c',
+      innerCmd,
+    ].filter(Boolean);
 
-  const dockerRun = (innerCmd) =>
-    `docker run --rm -i --platform linux/amd64 ${networkFlag}-v "${REPO_ROOT}:/work" -w /work ${dockerImage} bash -c ${JSON.stringify(
-      innerCmd
-    )}`;
+    execFileSync('docker', dockerArgs, { stdio: 'inherit' });
+  };
 
   console.log(`Running visual regression tests in Docker (${dockerImage})`);
 
@@ -216,9 +230,7 @@ if (useDocker) {
   // mounted `node_modules` binaries to Linux, breaking host builds.
   if (useStatic && (forceBuild || !staticBuildExists())) {
     console.log('Building static Storybook inside the container...');
-    execSync(dockerRun(`set -e; ${setup}; yarn build-storybook`), {
-      stdio: 'inherit',
-    });
+    runInDocker(`set -e; ${setup}; yarn build-storybook`);
   } else if (useStatic) {
     console.log(`Reusing existing ${STATIC_DIR}/ (--no-build)`);
   }
@@ -237,7 +249,7 @@ if (useDocker) {
   // `--maxWorkers`/`--testTimeout` add headroom for the slower emulated env.
   const failed = runVariants((variant) => {
     const innerCmd = `set -e; ${setup}; ${staticServe}VRT_VARIANT=${variant} yarn test-storybook --maxWorkers=2 --testTimeout=60000${argsSuffix}`;
-    execSync(dockerRun(innerCmd), { stdio: 'inherit' });
+    runInDocker(innerCmd);
   });
 
   process.exit(failed ? 1 : 0);
