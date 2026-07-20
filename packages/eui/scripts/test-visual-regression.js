@@ -91,11 +91,9 @@ const stopStaticServer = (server) => {
   if (!server?.pid) return;
 
   if (process.platform === 'win32') {
-    spawnSync(
-      'taskkill',
-      ['/pid', server.pid.toString(), '/t', '/f'],
-      { stdio: 'ignore' }
-    );
+    spawnSync('taskkill', ['/pid', server.pid.toString(), '/t', '/f'], {
+      stdio: 'ignore',
+    });
     return;
   }
 
@@ -208,9 +206,7 @@ if (useDocker) {
       '-i',
       '--platform',
       'linux/amd64',
-      // `--network=host` lets containers reach host services on Linux;
-      // Docker Desktop on macOS handles `host.docker.internal` automatically
-      process.platform === 'linux' && '--network=host',
+      process.platform === 'linux' && !useStatic && '--network=host',
       '-v',
       `${REPO_ROOT}:/work`,
       '-w',
