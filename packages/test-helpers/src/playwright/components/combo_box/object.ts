@@ -9,7 +9,7 @@
 import type { Locator } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { BaseObject } from '../../base_object';
+import { BaseObject, type ObjectScope } from '../../base_object';
 import { EuiComboBoxSelectors } from '../../../components/combo_box/selectors';
 
 /**
@@ -21,6 +21,10 @@ import { EuiComboBoxSelectors } from '../../../components/combo_box/selectors';
  * `comboBoxInput`).
  */
 export class EuiComboBoxObject extends BaseObject {
+  constructor(scope: ObjectScope, testSubj: string) {
+    super(scope, testSubj, EuiComboBoxSelectors.ROOT_SELECTOR);
+  }
+
   /**
    * Replace the current selection with `labels`. Set-semantics: order-
    * independent — already-selected labels are kept, missing ones are added,
@@ -28,8 +32,16 @@ export class EuiComboBoxObject extends BaseObject {
    *
    * Throws with a descriptive message if any label never appears in the
    * dropdown (catches test/data drift early).
+   *
+   * `timeout` bounds how long each option is awaited in the dropdown after
+   * typing — raise it for slow / server-backed combos whose options load
+   * asynchronously.
    */
-  async setSelectedOptions(labels: string[]): Promise<void> {
+  async setSelectedOptions(
+    labels: string[],
+    { timeout = 2_500 }: { timeout?: number } = {}
+  ): Promise<void> {
+    await this.assertComponent();
     // Dedupe while preserving order.
     const targetLabels = [...new Set(labels)];
     // `[...arr].sort()` (not `arr.sort()`) — sort mutates in place; the copy
@@ -51,7 +63,7 @@ export class EuiComboBoxObject extends BaseObject {
     await this.clear();
 
     for (const label of targetLabels) {
-      await this.addOption(label);
+      await this.addOption(label, timeout);
     }
 
     if (targetLabels.length > 0) {
@@ -62,6 +74,45 @@ export class EuiComboBoxObject extends BaseObject {
     }
 
     expect([...(await this.getSelectedOptions())].sort()).toEqual(sortedTarget);
+  }
+
+  /**
+   * Set free-text values on an `onCreateOption` combo box by typing and
+   * committing each with Enter, then verifying it was accepted. Unlike
+   * {@link setSelectedOptions}, this creates values rather than picking
+   * existing options.
+   */
+  async setCustomSelectedOptions(
+    labels: string[],
+    { timeout = 2_500 }: { timeout?: number } = {}
+  ): Promise<void> {
+    await this.assertComponent();
+    for (const label of labels) {
+      await this.input.click();
+      await this.searchInput.fill(label);
+      await this.searchInput.press('Enter');
+      await this.searchInput.blur();
+    }
+    // The typed value equals the resulting pill/input label, so membership is
+    // an exact check.
+    for (const label of labels) {
+      await expect.poll(() => this.getSelectedOptions(), { timeout }).toContain(label);
+    }
+  }
+
+  /**
+   * Open the dropdown and return the labels of the currently visible options.
+   * Virtualized lists mount only a subset, so this is the visible slice — not
+   * guaranteed to be every option.
+   */
+  async getAllVisibleOptions(): Promise<string[]> {
+    await this.assertComponent();
+    await this.input.click();
+    const optionsList = this.root
+      .page()
+      .locator(EuiComboBoxSelectors.optionsListFor(this.testSubj));
+    await optionsList.waitFor({ state: 'visible' });
+    return optionsList.getByRole('option').allInnerTexts();
   }
 
   /**
@@ -77,6 +128,7 @@ export class EuiComboBoxObject extends BaseObject {
    * options list).
    */
   async clear(): Promise<void> {
+    await this.assertComponent();
     if ((await this.getSelectedOptions()).length === 0) {
       return;
     }
@@ -98,13 +150,12 @@ export class EuiComboBoxObject extends BaseObject {
    * Currently selected option labels.
    *
    * - Multi-select / `singleSelection=true` → pill texts.
-   * - `singleSelection={{ asPlainText: true }}` → the input value. EUI
-   *   renders no pills in this mode; the input IS the selection display.
-   *   Works correctly with both `isClearable=true` (default) and
-   *   `isClearable=false`.
+   * - `singleSelection={{ asPlainText: true }}` → the input value (EUI renders
+   *   no pills in this mode).
    * - Nothing selected → `[]`.
    */
   async getSelectedOptions(): Promise<string[]> {
+    await this.assertComponent();
     if (await this.hasPills()) {
       return this.pills.allInnerTexts();
     }
@@ -156,27 +207,30 @@ export class EuiComboBoxObject extends BaseObject {
     await this.searchInput.blur();
   }
 
-  private async addOption(label: string): Promise<void> {
+  private async addOption(label: string, timeout = 2_500): Promise<void> {
     // Clicking the outer wrapper does not reliably open the dropdown; the
     // inner `comboBoxInput` element does.
     await this.input.click();
 
-    // Don't type to filter: EUI only sets an option's `title` while the input
-    // is empty, and the getByTitle match below relies on it. setSelectedOptions
-    // clears the selection first, so the list is unfiltered and every option
-    // renders its title.
-    //
-    // Options list is rendered in a portal outside `this.root`, so locate
-    // from page level. Use .and(getByTitle) rather than embedding the label
-    // in the CSS string — CSS attribute selectors break on labels containing
-    // quotes, brackets, or backslashes. getByTitle alone would search
-    // descendants; .and() intersects so it matches the option element itself.
+    // Type to filter, then match the option by accessible name. Substring match
+    // (not exact): while filtering, EUI middle-truncates the option text, so the
+    // accessible name isn't the literal label. The list renders in a portal
+    // outside `this.root`, so locate it from page level; the poll waits out async
+    // filtering.
+    await this.searchInput.fill(label);
     const option = this.root
       .page()
-      .locator(EuiComboBoxSelectors.optionFor(this.testSubj))
-      .and(this.root.page().getByTitle(label, { exact: true }));
-    await option.waitFor({ state: 'visible' });
-    await option.click();
+      .locator(EuiComboBoxSelectors.optionsListFor(this.testSubj))
+      .getByRole('option', { name: label });
+    await expect.poll(() => option.count(), { timeout }).toBeGreaterThan(0);
+    if ((await option.count()) === 1) {
+      await option.click();
+    } else {
+      // Substring can match several (e.g. "Item 1" also matches "Item 10") —
+      // keyboard-select the highlighted match.
+      await this.searchInput.press('ArrowDown');
+      await this.searchInput.press('Enter');
+    }
   }
 
   /**
@@ -228,7 +282,7 @@ export class EuiComboBoxObject extends BaseObject {
   }
 
   private get pills(): Locator {
-    return this.root.getByTestId(EuiComboBoxSelectors.PILL_TEST_SUBJ);
+    return this.root.locator(EuiComboBoxSelectors.PILL_SELECTOR);
   }
 
   private async isPlainText(): Promise<boolean> {

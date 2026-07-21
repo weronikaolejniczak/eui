@@ -35,10 +35,19 @@ export abstract class BaseObject {
    */
   protected readonly testSubj: string;
 
-  constructor(scope: ObjectScope, testSubj: string) {
+  /**
+   * CSS selector the root must match to be this component (e.g. `.euiComboBox`).
+   * When set, {@link assertComponent} enforces it.
+   */
+  protected readonly componentSelector?: string;
+
+  private componentVerified = false;
+
+  constructor(scope: ObjectScope, testSubj: string, componentSelector?: string) {
     this.scope = scope instanceof BaseObject ? scope.locator : scope;
     this.root = this.scope.getByTestId(testSubj);
     this.testSubj = testSubj;
+    this.componentSelector = componentSelector;
   }
 
   /**
@@ -47,5 +56,30 @@ export abstract class BaseObject {
    */
   get locator(): Locator {
     return this.root;
+  }
+
+  /**
+   * Throw if the element at `testSubj` isn't this component (a `data-test-subj`
+   * isn't unique to a component type). Call at the top of public methods.
+   * Memoized and lazy — runs once per instance, not in the constructor, so it
+   * doesn't race initial render. No-op without a `componentSelector`.
+   */
+  protected async assertComponent(): Promise<void> {
+    if (this.componentVerified || !this.componentSelector) {
+      return;
+    }
+    // Wait for the element before checking its type, so the guard doesn't
+    // false-fail when a caller acts before render.
+    await this.root.first().waitFor({ state: 'attached' });
+    const matches = await this.root
+      .and(this.scope.locator(this.componentSelector))
+      .count();
+    if (matches === 0) {
+      throw new Error(
+        `Expected the element with data-test-subj "${this.testSubj}" to match "${this.componentSelector}", ` +
+          `but it does not. Are you using the right Component Object for this element?`
+      );
+    }
+    this.componentVerified = true;
   }
 }

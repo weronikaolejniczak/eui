@@ -84,4 +84,45 @@ test.describe('EuiComboBoxObject', () => {
       expect(await comboBox.getSelectedOptions()).toEqual([]);
     });
   });
+
+  test.describe('getAllVisibleOptions', () => {
+    test('returns the visible option labels', async () => {
+      const options = await comboBox.getAllVisibleOptions();
+      expect(options).toContain('Item 1');
+      expect(options).toContain('Item 5');
+    });
+  });
+});
+
+test.describe('EuiComboBoxObject component-type guard', () => {
+  // Every public method must reject when pointed at the wrong element. Add new
+  // public methods here so they're covered too.
+  const PUBLIC_METHODS = [
+    'setSelectedOptions',
+    'setCustomSelectedOptions',
+    'getSelectedOptions',
+    'getAllVisibleOptions',
+    'clear',
+  ] as const;
+
+  // The guard runs first in each method, so the call rejects before it reads its
+  // arguments — calling with none is fine. `comboBoxSearchInput` exists on the
+  // page but is the inner input, not the outer `.euiComboBox` root: it stands in
+  // for pointing the helper at a different component that shares a `data-test-subj`.
+  for (const method of PUBLIC_METHODS) {
+    test(`${method} throws when the data-test-subj is not an EuiComboBox`, async ({
+      page,
+    }) => {
+      await page.goto(PLAYGROUND_URL);
+      await page
+        .getByTestId('comboBoxSearchInput')
+        .waitFor({ state: 'visible' });
+
+      const wrongTarget = new EuiComboBoxObject(page, 'comboBoxSearchInput');
+
+      await expect(
+        (wrongTarget[method] as () => Promise<unknown>)()
+      ).rejects.toThrow(/Are you using the right Component Object/i);
+    });
+  }
 });
