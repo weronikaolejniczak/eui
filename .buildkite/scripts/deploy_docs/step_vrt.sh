@@ -51,6 +51,7 @@ VRT_RELEVANT_PATHS=(
   '^\.yarn/'
   '^\.buildkite/pipelines/deploy_docs\.yml$'
   '^\.buildkite/scripts/deploy_docs/'
+  '^\.buildkite/scripts/common/'
 )
 
 # Sets the meta-data the downstream update-baselines step reads, then exits.
