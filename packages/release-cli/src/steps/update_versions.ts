@@ -132,7 +132,7 @@ export const stepUpdateVersions = async (
     await stageFiles(uniqueFilesToCommit);
 
     // Commit all package.json files and yarn.lock
-    await commitFiles('chore: update package versions [skip ci]', uniqueFilesToCommit);
+    await commitFiles('chore: update package versions', uniqueFilesToCommit);
   }
 
   return changedWorkspaces;
