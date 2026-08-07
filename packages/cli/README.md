@@ -10,6 +10,13 @@ List all public EUI components:
 npx @elastic/eui-cli list components
 ```
 
+Choose JSON or TOON output for programmatic and agent consumption:
+
+```sh
+npx @elastic/eui-cli list components --format json
+npx @elastic/eui-cli list components --format toon
+```
+
 ## Development
 
 From `packages/cli`:

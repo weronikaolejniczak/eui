@@ -7003,6 +7003,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/eui-cli@workspace:packages/cli"
   dependencies:
+    "@toon-format/toon": "npm:^4.1.0"
     "@types/jest": "npm:^29.5.14"
     "@types/node": "npm:^20.13.0"
     "@types/yargs": "npm:^17.0.33"
@@ -10699,6 +10700,13 @@ __metadata:
   peerDependencies:
     "@testing-library/dom": ">=7.21.4"
   checksum: 10c0/60c401edcc1b39f98aefd0e236af69c1a0454e3a7b91b92d62e2d654b044c51d39abc4a7ee0f5675566e7246dc5fc5e91af872a49da7e30a5f0e9e52f5a83a82
+  languageName: node
+  linkType: hard
+
+"@toon-format/toon@npm:^4.1.0":
+  version: 4.1.1
+  resolution: "@toon-format/toon@npm:4.1.1"
+  checksum: 10c0/d107626fabd779fd8c41c8041c6f7cadc56f11c7a023adc50a794dc8bb0852ad52f4140bb1fe0a143b7a3229467e00c51787c303d2f2dd83d700a72e4e4eeedb
   languageName: node
   linkType: hard
 

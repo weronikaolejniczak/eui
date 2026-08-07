@@ -13,13 +13,35 @@ import { hideBin } from 'yargs/helpers';
 
 import components from './data/components.json';
 
-const writeComponents = () => {
-  process.stdout.write(`${components.join('\n')}\n`);
+const outputFormats = ['text', 'json', 'toon'] as const;
+type OutputFormat = (typeof outputFormats)[number];
+
+const writeComponents = async (format: OutputFormat) => {
+  const data = { components };
+
+  switch (format) {
+    case 'json':
+      process.stdout.write(`${JSON.stringify(data, null, 2)}\n`);
+      return;
+    case 'toon': {
+      const { encode } = await import('@toon-format/toon');
+      process.stdout.write(`${encode(data)}\n`);
+      return;
+    }
+    default:
+      process.stdout.write(`${components.join('\n')}\n`);
+  }
 };
 
 export const cli = (args: string[] = hideBin(process.argv)) =>
   yargs(args)
     .scriptName('eui')
+    .option('format', {
+      choices: outputFormats,
+      default: 'text' as const,
+      description: 'Output format',
+      global: true,
+    })
     .command(
       'list <resource>',
       'List EUI resources',
@@ -30,7 +52,7 @@ export const cli = (args: string[] = hideBin(process.argv)) =>
           demandOption: true,
           type: 'string',
         }),
-      () => writeComponents()
+      ({ format }) => writeComponents(format)
     )
     .demandCommand(1)
     .strict()
