@@ -1,0 +1,43 @@
+{
+  "name": "@elastic/eui-cli",
+  "version": "0.1.0",
+  "description": "Command-line access to Elastic UI's knowledge base",
+  "license": "Elastic-2.0 OR SSPL-1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elastic/eui.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/elastic/eui/tree/main/packages/cli",
+  "bin": {
+    "eui": "lib/cli.js"
+  },
+  "files": [
+    "lib",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "yarn build:clean && tsc",
+    "build:clean": "rimraf lib/",
+    "lint": "tsc --noEmit && tsc --noEmit --project tsconfig.test.json",
+    "test-unit": "yarn build && jest"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.13.0",
+    "@types/yargs": "^17.0.33",
+    "jest": "^29.7.0",
+    "rimraf": "^6.0.1",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.8.3"
+  }
+}

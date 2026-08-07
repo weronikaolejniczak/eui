@@ -6999,6 +6999,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elastic/eui-cli@workspace:packages/cli":
+  version: 0.0.0-use.local
+  resolution: "@elastic/eui-cli@workspace:packages/cli"
+  dependencies:
+    "@types/jest": "npm:^29.5.14"
+    "@types/node": "npm:^20.13.0"
+    "@types/yargs": "npm:^17.0.33"
+    jest: "npm:^29.7.0"
+    rimraf: "npm:^6.0.1"
+    ts-jest: "npm:^29.2.5"
+    typescript: "npm:^5.8.3"
+    yargs: "npm:^17.7.2"
+  bin:
+    eui: lib/cli.js
+  languageName: unknown
+  linkType: soft
+
 "@elastic/eui-docgen@workspace:^, @elastic/eui-docgen@workspace:packages/eui-docgen":
   version: 0.0.0-use.local
   resolution: "@elastic/eui-docgen@workspace:packages/eui-docgen"
