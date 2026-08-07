@@ -23,9 +23,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn build:clean && tsc",
+    "build": "yarn build:clean && yarn generate && tsc",
     "build:clean": "rimraf lib/",
-    "lint": "tsc --noEmit && tsc --noEmit --project tsconfig.test.json",
+    "generate": "node scripts/generate_components.mjs",
+    "generate:check": "node scripts/generate_components.mjs --check",
+    "lint": "yarn generate:check && tsc --noEmit && tsc --noEmit --project tsconfig.test.json",
     "test-unit": "yarn build && jest"
   },
   "dependencies": {

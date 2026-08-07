@@ -11,9 +11,27 @@
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 
+import components from './data/components.json';
+
+const writeComponents = () => {
+  process.stdout.write(`${components.join('\n')}\n`);
+};
+
 export const cli = (args: string[] = hideBin(process.argv)) =>
   yargs(args)
     .scriptName('eui')
+    .command(
+      'list <resource>',
+      'List EUI resources',
+      (command) =>
+        command.positional('resource', {
+          choices: ['components'] as const,
+          description: 'Resource to list',
+          demandOption: true,
+          type: 'string',
+        }),
+      () => writeComponents()
+    )
     .demandCommand(1)
     .strict()
     .recommendCommands()
