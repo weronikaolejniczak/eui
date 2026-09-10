@@ -52,8 +52,8 @@ on:
         default: false
         type: boolean
 concurrency:
-  group: ${{ inputs.kibana_nightly && 'kibana-nightly' || format('release-{0}', github.run_id) }}
-  cancel-in-progress: false
+  group: ${{ inputs.kibana_nightly && 'kibana-nightly' || (inputs.kibana_source_pr_number && format('kibana-pr-{0}', inputs.kibana_source_pr_number)) || format('release-{0}', github.run_id) }}
+  cancel-in-progress: ${{ !inputs.kibana_nightly && inputs.kibana_source_pr_number != '' }}
   queue: max
 permissions:
   id-token: write # Required for OIDC

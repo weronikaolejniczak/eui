@@ -9,7 +9,9 @@ on:
     # Source: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
     - cron: '5 3 * * 1-5'
   pull_request_target:
-    types: [labeled]
+    # `ci:regression-integration-test-kibana` - one-shot on label add.
+    # `ci:regression-integration-test-kibana-auto` - on add, then again on every push.
+    types: [labeled, synchronize]
   workflow_dispatch:
     inputs:
       release_ref:
@@ -24,6 +26,13 @@ on:
         description: Kibana PR body
         default: This PR updates EUI dependencies in Kibana
         type: string
+      source_pr_number:
+        description: Source EUI PR number. Reuses that PR's Kibana integration branch if a PR is still open.
+        type: number
+        required: false
+concurrency:
+  group: ${{ (github.event.pull_request.number || inputs.source_pr_number) && format('kibana-integration-pr-{0}', github.event.pull_request.number || inputs.source_pr_number) || format('kibana-integration-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event.pull_request.number != '' || inputs.source_pr_number != '' }}
 jobs:
   # Triggers the `release.yml` workflow to publish a snapshot.
   # We dispatch (instead of `workflow_call`) so `release.yml` stays the top-level
@@ -34,7 +43,11 @@ jobs:
     name: Trigger snapshot release
     runs-on: ubuntu-latest
     if: >-
-      (github.event_name != 'pull_request_target' || github.event.label.name == 'ci:regression-integration-test-kibana') &&
+      (github.event_name != 'pull_request_target' ||
+        github.event.label.name == 'ci:regression-integration-test-kibana' ||
+        github.event.label.name == 'ci:regression-integration-test-kibana-auto' ||
+        (github.event.action == 'synchronize' &&
+          contains(github.event.pull_request.labels.*.name, 'ci:regression-integration-test-kibana-auto'))) &&
       (github.event_name != 'schedule' || github.repository == 'elastic/eui')
     permissions:
       actions: write
@@ -49,6 +62,7 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           INPUT_PR_TITLE: ${{ inputs.pr_title }}
           INPUT_PR_BODY: ${{ inputs.pr_body }}
+          INPUT_SOURCE_PR_NUMBER: ${{ inputs.source_pr_number }}
         # language=bash
         run: |
           set -euo pipefail
@@ -76,6 +90,9 @@ jobs:
               "-f" "kibana_pr_title=$INPUT_PR_TITLE"
               "-f" "kibana_pr_body=$INPUT_PR_BODY"
             )
+            if [[ -n "${INPUT_SOURCE_PR_NUMBER:-}" ]]; then
+              workflow_args+=( -f "kibana_source_pr_number=$INPUT_SOURCE_PR_NUMBER" )
+            fi
           fi
 
           # This job has no checkout, so gh cannot infer the repository.

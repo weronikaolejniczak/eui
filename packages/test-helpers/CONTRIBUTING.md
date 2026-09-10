@@ -119,7 +119,7 @@ Iterating in Kibana means you exercise the helper against the DOM it must actual
 **3. Port to EUI and publish via a snapshot.** Once proven, move the object into this package (with `selectors.ts`, validation specs, and a README per [Adding a new Component Object](#adding-a-new-component-object)) and open the EUI PR. To run the *published* helper through Kibana CI you need a **snapshot** — Kibana CI installs from the npm registry, not a git ref, and this package is one workspace in the EUI monorepo, so you can't point Kibana at an EUI branch or commit.
 
 - **Nightly:** EUI auto-publishes a snapshot on weekdays under the `snapshot` dist-tag (see [`.github/workflows/update_kibana_dependencies.yml`](../../.github/workflows/update_kibana_dependencies.yml) for the schedule and dist-tag). Pin Kibana's `@elastic/eui-test-helpers` to that exact version.
-- **On demand:** label the EUI PR `ci:regression-integration-test-kibana` to build a snapshot from the PR head and kick off the Kibana integration chain (requires write/label access on `elastic/eui`).
+- **On demand:** label the EUI PR `ci:regression-integration-test-kibana` to build a snapshot from the PR head and kick off the Kibana integration chain once. Add `ci:regression-integration-test-kibana-auto` to rebuild and update the same Kibana PR on every subsequent push (requires write/label access on `elastic/eui`).
 
 Repin Kibana to the official release before merging its PR — snapshots are moving prereleases and get pruned.
 

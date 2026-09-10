@@ -44,8 +44,8 @@ on:
         description: Published @elastic/eui snapshot version
         type: string
 concurrency:
-  group: ${{ inputs.nightly && 'kibana-nightly' || format('prepare-kibana-{0}', github.run_id) }}
-  cancel-in-progress: false
+  group: ${{ inputs.nightly && 'kibana-nightly' || (inputs.source_pr_number && format('prepare-kibana-pr-{0}', inputs.source_pr_number)) || format('prepare-kibana-{0}', github.run_id) }}
+  cancel-in-progress: ${{ !inputs.nightly && inputs.source_pr_number != '' }}
   queue: max
 permissions:
   id-token: write # Required for OIDC (Vault ephemeral token)
@@ -101,11 +101,15 @@ jobs:
         id: git_branch
         env:
           NIGHTLY: ${{ inputs.nightly }}
+          SOURCE_PR_NUMBER: ${{ inputs.source_pr_number }}
         # language=bash
         run: |
-          # Nightly runs reuse a fixed branch; all other runs remain unique.
+          # Nightly: one shared branch. Source EUI PR: one branch per PR so
+          # label/dispatch/auto-update all hit the same Kibana PR. Else unique.
           if [[ "$NIGHTLY" == "true" ]]; then
             branch_name="nightly/update-dependencies"
+          elif [[ -n "${SOURCE_PR_NUMBER:-}" ]]; then
+            branch_name="update-dependencies/pr-${SOURCE_PR_NUMBER}"
           else
             branch_name="update-dependencies/$(date +%s)"
           fi
@@ -186,9 +190,10 @@ jobs:
           GH_TOKEN: ${{ steps.fetch_ephemeral_token.outputs.token }}
           BRANCH_NAME: ${{ steps.git_branch.outputs.BRANCH_NAME }}
           NIGHTLY: ${{ inputs.nightly }}
+          SOURCE_PR_NUMBER: ${{ inputs.source_pr_number }}
         # language=bash
         run: |
-          if [[ "$NIGHTLY" == "true" ]]; then
+          if [[ "$NIGHTLY" == "true" || -n "${SOURCE_PR_NUMBER:-}" ]]; then
             git push -u --force fork "$BRANCH_NAME"
           else
             git push -u fork "$BRANCH_NAME"
