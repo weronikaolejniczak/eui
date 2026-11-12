@@ -7,6 +7,7 @@
  */
 
 import React, { FunctionComponent, PropsWithChildren } from 'react';
+import { css } from '@emotion/react';
 import { EuiMarkdownAstNodePosition } from '../../markdown_types';
 import { EuiToolTip } from '../../../tool_tip';
 import { EuiIcon } from '../../../icon';
@@ -28,7 +29,7 @@ export const tooltipMarkdownRenderer: FunctionComponent<
           <EuiIcon
             type="question"
             // This is to offset the tooltip icon, which isn't perfectly centered
-            css={{ transform: 'translateY(-1px)' }}
+            css={css({ transform: 'translateY(-1px)' })}
           />
         </span>
       </EuiToolTip>

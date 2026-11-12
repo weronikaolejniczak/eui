@@ -7,6 +7,7 @@
  */
 
 import React, { useEffect } from 'react';
+import { css } from '@emotion/react';
 
 import { EuiBreakpointSize, useEuiMemoizedStyles } from '../../services';
 import {
@@ -110,7 +111,7 @@ export const PaginationBar = ({
   }, [pageCount, onPageChange, pageIndex]);
 
   return (
-    <div css={[styles.root, !isResponsive && panelled && styles.panelled]}>
+    <div css={css([styles.root, !isResponsive && panelled && styles.panelled])}>
       <EuiTablePagination
         activePage={pageIndex}
         showPerPageOptions={showPerPageOptions}

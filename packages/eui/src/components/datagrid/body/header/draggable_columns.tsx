@@ -23,6 +23,7 @@ import {
   OnDragEndResponder,
   DraggableProvidedDragHandleProps,
 } from '@hello-pangea/dnd';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles, useGeneratedHtmlId } from '../../../../services';
 import {
@@ -287,7 +288,10 @@ export const DragOverlay: FunctionComponent<{
 }> = memo(({ isDragging, cursor, zIndex = 9999 }) => {
   return isDragging ? (
     <EuiPortal>
-      <div css={{ position: 'fixed', inset: 0 }} style={{ cursor, zIndex }} />
+      <div
+        css={css({ position: 'fixed', inset: 0 })}
+        style={{ cursor, zIndex }}
+      />
     </EuiPortal>
   ) : null;
 });

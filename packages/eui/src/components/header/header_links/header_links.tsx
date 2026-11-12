@@ -16,6 +16,7 @@ import React, {
   MouseEventHandler,
 } from 'react';
 import classNames from 'classnames';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles } from '../../../services';
 import { CommonProps } from '../../common';
@@ -124,10 +125,10 @@ export const EuiHeaderLinks: FunctionComponent<EuiHeaderLinksProps> = ({
           <EuiHideFor sizes={popoverBreakpoints}>
             <div
               className="euiHeaderLinks__list"
-              css={[
+              css={css([
                 styles.euiHeaderLinks__list,
                 styles.gutterSizes[gutterSize],
-              ]}
+              ])}
             >
               {renderedChildren}
             </div>

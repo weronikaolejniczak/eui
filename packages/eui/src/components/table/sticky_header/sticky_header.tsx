@@ -15,6 +15,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { css } from '@emotion/react';
 import { useEuiTableColumnDataStore } from '../store/provider';
 import { EuiTableHeader } from '../table_header';
 import { EuiTableWithinStickyHeaderProvider } from './context';
@@ -166,12 +167,12 @@ export const EuiTableStickyHeader = ({
       <div css={styles.wrapper} aria-hidden="true">
         <div
           className="euiTableStickyHeader__container"
-          css={[
+          css={css([
             // This CSS container is needed to feed `<EuiTableHeaderCell>`
             // with `sticky` prop set the necessary scroll state
             euiContainerCSS('normal', EUI_TABLE_CSS_CONTAINER_NAME, true),
             styles.innerWrapper,
-          ]}
+          ])}
           ref={stickyTableWrapperRef}
         >
           <table

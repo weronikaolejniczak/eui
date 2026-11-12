@@ -42,7 +42,7 @@ exports[`EuiGlobalToastList props side can be changed to left 1`] = `
         >
           <span
             aria-hidden="true"
-            class="css-5neova-icon-l-icon"
+            class="css-1e8xbf-icon-l-icon"
             color="#008A5E"
             data-euiicon-type="check"
           />
@@ -106,7 +106,7 @@ exports[`EuiGlobalToastList props side can be changed to left 1`] = `
         >
           <span
             aria-hidden="true"
-            class="css-5neova-icon-l-icon"
+            class="css-1e8xbf-icon-l-icon"
             color="#C61E25"
             data-euiicon-type="warning"
           />
@@ -183,7 +183,7 @@ exports[`EuiGlobalToastList props toasts is rendered 1`] = `
         >
           <span
             aria-hidden="true"
-            class="css-5neova-icon-l-icon"
+            class="css-1e8xbf-icon-l-icon"
             color="#008A5E"
             data-euiicon-type="check"
           />
@@ -247,7 +247,7 @@ exports[`EuiGlobalToastList props toasts is rendered 1`] = `
         >
           <span
             aria-hidden="true"
-            class="css-5neova-icon-l-icon"
+            class="css-1e8xbf-icon-l-icon"
             color="#C61E25"
             data-euiicon-type="warning"
           />

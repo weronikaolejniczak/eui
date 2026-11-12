@@ -7,6 +7,7 @@
  */
 
 import React, { FunctionComponent, MouseEventHandler } from 'react';
+import { css } from '@emotion/react';
 
 import { EuiAccordionProps } from '../accordion';
 import { EuiAccordionButton } from './accordion_button';
@@ -87,7 +88,7 @@ export const EuiAccordionTrigger: FunctionComponent<
   const optionalAction = extraAction && (
     <div
       className="euiAccordion__optionalAction"
-      css={{ flexShrink: 0, label: 'euiAccordion' }}
+      css={css({ flexShrink: 0, label: 'euiAccordion' })}
     >
       {extraAction}
     </div>
@@ -96,7 +97,7 @@ export const EuiAccordionTrigger: FunctionComponent<
   return (
     <div
       className="euiAccordion__triggerWrapper"
-      css={{ display: 'flex', alignItems: 'center' }}
+      css={css({ display: 'flex', alignItems: 'center' })}
     >
       {arrowDisplay === 'left' && arrow}
       {button}

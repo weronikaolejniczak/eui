@@ -7,6 +7,7 @@
  */
 
 import React, { PropsWithChildren } from 'react';
+import { css } from '@emotion/react';
 
 import { useEuiTheme } from '../../services';
 import { logicalStyle } from '../../global_styling';
@@ -34,7 +35,7 @@ export const EuiComboBoxOptionAppendPrepend = <T,>({
       {option?.prepend && (
         <span
           className={`${classNamePrefix}__prepend`}
-          css={{ ...logicalStyle('margin-right', margin), ...centerIcons }}
+          css={css({ ...logicalStyle('margin-right', margin), ...centerIcons })}
         >
           {option.prepend}
         </span>
@@ -43,7 +44,7 @@ export const EuiComboBoxOptionAppendPrepend = <T,>({
       {option?.append && (
         <span
           className={`${classNamePrefix}__append`}
-          css={{ ...logicalStyle('margin-left', margin), ...centerIcons }}
+          css={css({ ...logicalStyle('margin-left', margin), ...centerIcons })}
         >
           {option.append}
         </span>

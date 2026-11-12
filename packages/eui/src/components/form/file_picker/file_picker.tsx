@@ -18,6 +18,7 @@ import React, {
   useState,
 } from 'react';
 import classNames from 'classnames';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles, useGeneratedHtmlId } from '../../../services';
 import { CommonProps } from '../../common';
@@ -278,7 +279,7 @@ export const EuiFilePicker = forwardRef<EuiFilePickerRef, EuiFilePickerProps>(
         clearButton = (
           <EuiFormControlLayoutClearButton
             aria-label={removeSelectedAriaLabel}
-            css={[styles.euiFilePicker__clearButton, rightIconStyles]}
+            css={css([styles.euiFilePicker__clearButton, rightIconStyles])}
             className="euiFilePicker__clearButton"
             onClick={removeFiles}
             size={compressed ? 's' : 'm'}

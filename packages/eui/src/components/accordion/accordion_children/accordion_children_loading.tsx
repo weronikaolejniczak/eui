@@ -7,6 +7,7 @@
  */
 
 import React, { FunctionComponent } from 'react';
+import { css } from '@emotion/react';
 
 import { useEuiTheme } from '../../../services';
 import { EuiI18n } from '../../i18n';
@@ -29,7 +30,7 @@ export const EuiAccordionChildrenLoading: FunctionComponent<
     <>
       <EuiLoadingSpinner
         className="euiAccordion__spinner"
-        css={{ marginInlineEnd: euiTheme.size.xs }}
+        css={css({ marginInlineEnd: euiTheme.size.xs })}
       />
       <EuiText size="s">
         <p>

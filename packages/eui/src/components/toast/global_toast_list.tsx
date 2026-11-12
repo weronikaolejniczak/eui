@@ -17,6 +17,7 @@ import React, {
   useState,
 } from 'react';
 import classNames from 'classnames';
+import { css } from '@emotion/react';
 
 import { CommonProps, keysOf } from '../common';
 import { useEuiMemoizedStyles } from '../../services';
@@ -391,11 +392,11 @@ export const EuiGlobalToastList: FunctionComponent<EuiGlobalToastListProps> = ({
       toasts.length > 0 && (
         <EuiNotificationBadge
           className="euiGlobalToastList__countBadge"
-          css={[
+          css={css([
             styles.notificationBadge.notificationBadge,
             toastWasDismissed && styles.notificationBadge.hasFadeOut,
             isListEmpty && styles.notificationBadge.hasFadeOut,
-          ]}
+          ])}
           size="m"
           color="subdued"
           data-test-subj="euiGlobalToastListNotificationBadge"

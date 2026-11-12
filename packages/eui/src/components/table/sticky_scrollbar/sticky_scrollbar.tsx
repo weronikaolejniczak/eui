@@ -14,6 +14,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { css } from '@emotion/react';
 import { useEuiMemoizedStyles } from '../../../services';
 import { euiTableStickyScrollbarStyles } from './sticky_scrollbar.styles';
 
@@ -168,7 +169,7 @@ export const EuiTableStickyScrollbar = ({
 
   return (
     <div
-      css={[styles.wrapper, isHidden && styles.wrapperHidden]}
+      css={css([styles.wrapper, isHidden && styles.wrapperHidden])}
       data-test-subj="euiTableStickyScrollbar"
       aria-hidden
     >

@@ -8,6 +8,7 @@
 
 import React, { FunctionComponent, ReactNode } from 'react';
 import classNames from 'classnames';
+import { css } from '@emotion/react';
 
 import { useEuiTheme } from '../../services';
 import { EuiTitle, EuiTitleProps } from '../title';
@@ -52,7 +53,7 @@ export const EuiSideNavHeading: FunctionComponent<EuiSideNavHeadingProps> = ({
       <HeadingElement
         id={id}
         className={classes}
-        css={{ marginBlockEnd: euiTheme.size.l }}
+        css={css({ marginBlockEnd: euiTheme.size.l })}
         {...rest}
       >
         {children}

@@ -14,6 +14,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles } from '../../../../services';
 import { EuiIcon } from '../../../icon';
@@ -139,10 +140,10 @@ export const EuiDataGridHeaderCell: FunctionComponent<EuiDataGridHeaderCellProps
                       <EuiIcon
                         type="drag"
                         size="s"
-                        css={[
+                        css={css([
                           styles.euiDataGridHeaderCell__actions.action,
                           styles.euiDataGridHeaderCell__actions.start,
-                        ]}
+                        ])}
                       />
                     </span>
                   )}

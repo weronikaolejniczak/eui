@@ -18,6 +18,7 @@ import {
   _EuiThemeBorderColors,
   getTokenName,
 } from '@elastic/eui-theme-common';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles, useEuiTheme } from '../../services';
 import { CommonProps } from '../common';
@@ -193,7 +194,7 @@ export const EuiToast: FunctionComponent<EuiToastProps> = ({
 
     return (
       <EuiIcon
-        css={[styles.icon, iconStyles.size.l]}
+        css={css([styles.icon, iconStyles.size.l])}
         type={iconType}
         size="l"
         aria-hidden="true"

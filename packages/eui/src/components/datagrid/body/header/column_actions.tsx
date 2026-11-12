@@ -19,6 +19,7 @@ import React, {
   useEffect,
 } from 'react';
 import { tabbable, FocusableElement } from 'tabbable';
+import { css } from '@emotion/react';
 
 import { keys, useEuiMemoizedStyles } from '../../../../services';
 // Keep the i18n scope the same as EuiDataGridHeaderCell
@@ -210,10 +211,10 @@ export const ColumnActions: FunctionComponent<
                 ? actionsButtonAriaLabel
                 : actionsEnterKeyInstructions
             }
-            css={[
+            css={css([
               styles.euiDataGridHeaderCell__actions.action,
               styles.euiDataGridHeaderCell__actions.end,
-            ]}
+            ])}
             data-test-subj={`dataGridHeaderCellActionButton-${id}`}
           />
         }

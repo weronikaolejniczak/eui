@@ -16,6 +16,7 @@ import React, {
   useRef,
 } from 'react';
 import isEqual from 'lodash/isEqual';
+import { css } from '@emotion/react';
 
 import { logicalStyle, mathWithUnits } from '../../../global_styling';
 import { useUpdateEffect, useDeepEqual, useEuiTheme } from '../../../services';
@@ -257,7 +258,7 @@ const RowHeightControl = ({
           <EuiFlexGroup gutterSize="s" responsive={false}>
             <EuiButtonGroup
               legend={rowHeightLabel}
-              css={{ flexShrink: 0, flexBasis: '66.6%' }}
+              css={css({ flexShrink: 0, flexBasis: '66.6%' })}
               variant="selection"
               buttonSize="s"
               isFullWidth

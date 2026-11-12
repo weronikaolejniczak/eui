@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import { css } from '@emotion/react';
 
 import { useEuiMemoizedStyles } from '../../../services';
 import { EuiFlexItem } from '../../flex';
@@ -25,10 +26,10 @@ export const CloseButtonSpacer: React.FC<{ showDivider: boolean }> = ({
   return (
     <EuiFlexItem
       grow={false}
-      css={[
+      css={css([
         styles.euiFlyoutMenu__spacer,
         showDivider && styles.euiFlyoutMenu__divider,
-      ]}
+      ])}
       className={showDivider ? 'euiFlyoutMenu__divider' : undefined}
       aria-hidden={showDivider ? 'true' : undefined}
     />

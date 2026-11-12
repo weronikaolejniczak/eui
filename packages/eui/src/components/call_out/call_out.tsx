@@ -17,6 +17,7 @@ import React, {
 } from 'react';
 import classNames from 'classnames';
 import { _EuiThemeBorderColors, getTokenName } from '@elastic/eui-theme-common';
+import { css } from '@emotion/react';
 
 import {
   useCombinedRefs,
@@ -236,7 +237,7 @@ export const EuiCallOut = forwardRef<HTMLDivElement, EuiCallOutProps>(
 
       return (
         <EuiIcon
-          css={[styles.icon, size === 'm' && iconStyles.size.l]}
+          css={css([styles.icon, size === 'm' && iconStyles.size.l])}
           type={iconType}
           size={size === 's' ? 'm' : 'l'}
           aria-hidden="true"
