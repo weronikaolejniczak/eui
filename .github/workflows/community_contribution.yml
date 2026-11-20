@@ -3,6 +3,8 @@ on:
   pull_request_target:
     types: [opened, reopened, edited]
 
+permissions: {}
+
 jobs:
   community-pr-message:
     if: ${{ github.event.action != 'edited' || (github.event.pull_request.state == 'closed' && !github.event.pull_request.merged) }}
@@ -17,8 +19,8 @@ jobs:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
       id-token: write # Required for OIDC (Vault ephemeral token)
-      issues: write
-      pull-requests: write
+      issues: write # Required to read linked issues and add labels.
+      pull-requests: write # Required to comment on, close and reopen pull requests.
     steps:
       - name: Fetch ephemeral GitHub token
         id: fetch_ephemeral_token

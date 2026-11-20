@@ -6,14 +6,14 @@ on:
   pull_request_target:
     types: [labeled]
 
-permissions:
-  contents: read
-  issues: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   comment:
     runs-on: ubuntu-24.04
+    permissions:
+      issues: write # Required to comment on issues.
+      pull-requests: write # Required to comment on pull requests.
     steps:
       - name: Comment on help wanted issues
         if: ${{ github.event_name == 'issues' && github.event.label.name == 'help wanted' }}

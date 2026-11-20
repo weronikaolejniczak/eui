@@ -47,15 +47,16 @@ concurrency:
   group: ${{ inputs.nightly && 'kibana-nightly' || format('prepare-kibana-{0}', inputs.source_pr_number && format('pr-{0}', inputs.source_pr_number) || github.run_id) }}
   cancel-in-progress: false
   queue: max
-permissions:
-  id-token: write # Required for OIDC (Vault ephemeral token)
-  contents: read
-  actions: write # Required to dispatch the open-PR workflow
+permissions: {}
 
 jobs:
   update:
     name: Prepare changes
     runs-on: ubuntu-24.04
+    permissions:
+      id-token: write # Required for OIDC (Vault ephemeral token)
+      contents: read
+      actions: write # Required to dispatch the open-PR workflow
     steps:
       - name: Verify dependencies input
         env:

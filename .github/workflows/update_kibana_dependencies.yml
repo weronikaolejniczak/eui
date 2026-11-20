@@ -24,6 +24,9 @@ on:
         description: Kibana PR body
         default: This PR updates EUI dependencies in Kibana
         type: string
+
+permissions: {}
+
 jobs:
   # Triggers the `release.yml` workflow to publish a snapshot.
   # We dispatch (instead of `workflow_call`) so `release.yml` stays the top-level
@@ -37,7 +40,7 @@ jobs:
       (github.event_name != 'pull_request_target' || github.event.label.name == 'ci:regression-integration-test-kibana') &&
       (github.event_name != 'schedule' || github.repository == 'elastic/eui')
     permissions:
-      actions: write
+      actions: write # Required to dispatch the release workflow.
       contents: read
     steps:
       - name: Dispatch release workflow

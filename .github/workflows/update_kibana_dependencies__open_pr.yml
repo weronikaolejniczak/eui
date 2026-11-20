@@ -43,15 +43,15 @@ concurrency:
   # A newer run for the same source PR supersedes the older run and reports
   # status for the latest commits.
   cancel-in-progress: ${{ !!inputs.source_pr_number }}
-permissions:
-  contents: read
-  id-token: write
-  pull-requests: write
+permissions: {}
 
 jobs:
   open_pr:
     name: Open PR
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC (Vault ephemeral token)
     outputs:
       pr_url: ${{ steps.open_pr.outputs.pr_url }}
     steps:
@@ -207,6 +207,10 @@ jobs:
     # This job needs to be delayed so that GitHub can process the PR creation internally
     environment: delayed-1m
     needs: [open_pr]
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC (Vault ephemeral token)
+      pull-requests: write # Required to comment on the source PR
     steps:
       - name: Checkout repository
         # Checkout is needed to access the pr_bot_comment action
@@ -258,6 +262,9 @@ jobs:
     runs-on: ubuntu-slim
     environment: delayed-2h
     needs: [open_pr, post_open_pr]
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC (Vault ephemeral token)
     outputs:
       pending: ${{ steps.check_status.outputs.pending }}
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
@@ -284,6 +291,9 @@ jobs:
     environment: delayed-2h
     needs: [open_pr, check_ci_status_1]
     if: ${{ needs.check_ci_status_1.outputs.pending == 'true' }}
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC (Vault ephemeral token)
     outputs:
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
     steps:
@@ -315,6 +325,9 @@ jobs:
         (needs.check_ci_status_1.result == 'failure' && needs.check_ci_status_2.result == 'skipped') ||
         (needs.check_ci_status_2.result != 'skipped')
       )
+    permissions:
+      contents: read
+      pull-requests: write # Required to comment on the source PR
     steps:
       - name: Checkout repository
         if: ${{ inputs.source_pr_number }}

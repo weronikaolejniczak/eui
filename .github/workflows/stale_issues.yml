@@ -9,7 +9,7 @@ permissions:
 jobs:
   stale-prs: # close stale PRs after ~3 months
     permissions:
-      pull-requests: write
+      pull-requests: write # Required to label, comment on and close pull requests.
       issues: none # this will generate GH actions permissions errors. This is fine; we'd rather the action error than try to parse issues it doesn't need to
     runs-on: ubuntu-24.04
     steps:
@@ -27,7 +27,7 @@ jobs:
           debug-only: false
   stale-issues: # close stale issues after ~1 year
     permissions:
-      issues: write
+      issues: write # Required to label, comment on and close issues.
       pull-requests: none # this will generate GH actions permissions errors. This is fine; we'd rather the action error than try to parse PRs it doesn't need to
     runs-on: ubuntu-24.04
     steps:
@@ -47,7 +47,7 @@ jobs:
           debug-only: false
   answered-issues: # close answered issues after 3 days if no response
     permissions:
-      issues: write
+      issues: write # Required to comment on and close issues.
       pull-requests: none  # this will generate GH actions permissions errors. This is fine; we'd rather the action error than try to parse PRs it doesn't need to
     runs-on: ubuntu-24.04
     steps:
