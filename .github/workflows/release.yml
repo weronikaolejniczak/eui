@@ -122,6 +122,7 @@ jobs:
           # This is needed for yarn version to work properly, but it increases fetch time.
           # We can change this back to "1" if we replace yarn version with something else
           fetch-depth: 0
+          persist-credentials: false
       - name: Configure git
         run: |
           git config --global user.name 'elasticmachine'
@@ -233,6 +234,7 @@ jobs:
           # This is needed for yarn version to work properly, but it increases fetch time.
           # We can change this back to "1" if we replace yarn version with something else
           fetch-depth: 0
+          persist-credentials: false
       - name: Verify release commit is tagged
         run: |
           tag=$(git tag --points-at ${{ inputs.release_ref }})
