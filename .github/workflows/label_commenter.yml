@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Comment on help wanted issues
         if: ${{ github.event_name == 'issues' && github.event.label.name == 'help wanted' }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           COMMENT_BODY: >-
             👋 Thank you for your suggestion or request! While the EUI team agrees that it's valid, it's unlikely that we will prioritize this issue on our roadmap. We'll leave the issue open if you or anyone else in the community wants to implement it by contributing to EUI. If not, this issue will auto close in one year.
@@ -31,7 +31,7 @@ jobs:
 
       - name: Comment on icons issues
         if: ${{ github.event_name == 'issues' && github.event.label.name == 'icons' }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           COMMENT_BODY: 'cc @elastic/eui-icons'
         with:
@@ -44,7 +44,7 @@ jobs:
 
       - name: Comment on breaking change pull requests
         if: ${{ github.event_name == 'pull_request_target' && github.event.label.name == 'breaking change' }}
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
         env:
           COMMENT_BODY: |
             This PR contains breaking changes. The opener of this pull request is asked to perform the following due diligence steps below, to assist EUI in our next Kibana upgrade:

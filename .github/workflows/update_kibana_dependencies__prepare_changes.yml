@@ -72,13 +72,13 @@ jobs:
             echo "$num_deps dependencies to update"
           fi
       - name: Checkout the upstream elastic/kibana repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           repository: elastic/kibana
           fetch-depth: 1
           persist-credentials: false # We use different credentials for other git operations
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version-file: .nvmrc
           package-manager-cache: false # Don't cache anything as it's a different repository
@@ -91,7 +91,7 @@ jobs:
           corepack prepare "pnpm@${pnpm_ver}" --activate
       - name: Fetch ephemeral GitHub token
         id: fetch_ephemeral_token
-        uses: elastic/ci-gh-actions/fetch-github-token@v1.5.3
+        uses: elastic/ci-gh-actions/fetch-github-token@2feb1c6f5086cf8e06f61ef35e275abed3456f7b # v1.5.3
         with:
           vault-instance: ci-prod
           vault-role: token-policy-4fabc48bd03f

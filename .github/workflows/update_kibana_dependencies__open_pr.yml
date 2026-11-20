@@ -57,13 +57,13 @@ jobs:
     steps:
       - name: Checkout EUI snapshot
         if: ${{ inputs.nightly }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           ref: ${{ inputs.eui_ref }}
           persist-credentials: false
       - name: Fetch GitHub token
         id: ephemeral_token
-        uses: elastic/ci-gh-actions/fetch-github-token@v1.5.3
+        uses: elastic/ci-gh-actions/fetch-github-token@2feb1c6f5086cf8e06f61ef35e275abed3456f7b # v1.5.3
         with:
           vault-instance: ci-prod
           vault-role: token-policy-6becee3e5a43
@@ -211,11 +211,11 @@ jobs:
       - name: Checkout repository
         # Checkout is needed to access the pr_bot_comment action
         if: ${{ inputs.source_pr_number }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       # Token cannot be reused in this job because it's short-lived
       - name: Fetch GitHub token
         id: ephemeral_token
-        uses: elastic/ci-gh-actions/fetch-github-token@v1.5.3
+        uses: elastic/ci-gh-actions/fetch-github-token@2feb1c6f5086cf8e06f61ef35e275abed3456f7b # v1.5.3
         with:
           vault-instance: ci-prod
           vault-role: token-policy-6becee3e5a43
@@ -263,11 +263,11 @@ jobs:
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       # Token cannot be reused in this job because it's short-lived
       - name: Fetch GitHub token
         id: ephemeral_token
-        uses: elastic/ci-gh-actions/fetch-github-token@v1.5.3
+        uses: elastic/ci-gh-actions/fetch-github-token@2feb1c6f5086cf8e06f61ef35e275abed3456f7b # v1.5.3
         with:
           vault-instance: ci-prod
           vault-role: token-policy-6becee3e5a43
@@ -288,11 +288,11 @@ jobs:
       buildkite_url: ${{ steps.check_status.outputs.buildkite_url }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       # Token cannot be reused in this job because it's short-lived
       - name: Fetch GitHub token
         id: ephemeral_token
-        uses: elastic/ci-gh-actions/fetch-github-token@v1.5.3
+        uses: elastic/ci-gh-actions/fetch-github-token@2feb1c6f5086cf8e06f61ef35e275abed3456f7b # v1.5.3
         with:
           vault-instance: ci-prod
           vault-role: token-policy-6becee3e5a43
@@ -318,7 +318,7 @@ jobs:
     steps:
       - name: Checkout repository
         if: ${{ inputs.source_pr_number }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
       - name: Compose comment body
         id: compose_comment_body
         env:
