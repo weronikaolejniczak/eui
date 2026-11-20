@@ -8,6 +8,7 @@ permissions: {}
 
 jobs:
   changelog:
+    name: changelog # Required status check; renaming it breaks branch protection.
     runs-on: ubuntu-slim
     permissions:
       contents: read # Needed to clone the repo.

@@ -10,6 +10,7 @@ permissions: {}
 
 jobs:
   comment:
+    name: Comment on labelled issues and pull requests
     runs-on: ubuntu-24.04
     permissions:
       issues: write # Required to comment on issues.
