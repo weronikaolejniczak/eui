@@ -8,6 +8,11 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   comment:
     name: Comment on labelled issues and pull requests

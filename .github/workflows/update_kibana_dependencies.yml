@@ -27,6 +27,11 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+  queue: max
+
 jobs:
   # Triggers the `release.yml` workflow to publish a snapshot.
   # We dispatch (instead of `workflow_call`) so `release.yml` stays the top-level
