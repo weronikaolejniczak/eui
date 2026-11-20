@@ -133,7 +133,7 @@ jobs:
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: npm install -g npm@11.6.2 && yarn install --immutable
+        run: yarn install --immutable
       - name: Build release scripts
         run: yarn workspace @elastic/eui-release-cli run build
       - name: Rename git remote to upstream
@@ -254,7 +254,7 @@ jobs:
           cache: yarn
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: npm install -g npm@11.6.2 && yarn install --immutable
+        run: yarn install --immutable
       - name: Build release scripts
         run: yarn workspace @elastic/eui-release-cli run build
       - name: Rename git remote to upstream
